@@ -1,1956 +1,704 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="sv">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DP-600: The Atlas Protocol Ultimate</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-
+    
     <style>
-      body {
-        font-family: "Inter", sans-serif;
-        background-color: #09090b;
-        color: #e4e4e7;
-        overflow-x: hidden;
-      }
-      .glass-panel {
-        background: rgba(24, 24, 27, 0.85);
-        backdrop-filter: blur(16px);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
-      }
-      .phone-frame {
-        width: 360px;
-        height: 650px;
-        background-color: #18181b;
-        border-radius: 30px;
-        position: relative;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        border: 1px solid #27272a;
-        transition: all 0.3s ease;
-      }
-      .phone-frame:hover {
-        border-color: #d97706;
-        transform: translateY(-2px);
-        box-shadow: 0 10px 40px -10px rgba(217, 119, 6, 0.2);
-      }
-
-      /* --- CODE BLOCKS (UPDATED FIX) --- */
-      code {
-        font-family: "JetBrains Mono", monospace;
-        background: #000;
-        padding: 2px 4px;
-        border-radius: 4px;
-        color: #fcd34d;
-        font-size: 0.8em;
-        word-break: break-word;
-      }
-
-      pre {
-        background: #0c0a09;
-        padding: 12px;
-        border-radius: 8px;
-        border: 1px solid #292524;
-        overflow-x: auto;
-        font-family: "JetBrains Mono", monospace;
-        font-size: 0.75rem;
-        color: #a8a29e;
-        margin-bottom: 12px;
-        white-space: pre-wrap;
-        word-break: break-all;
-        max-width: 100%;
-      }
-
-      /* --- CHEAT SHEET STYLES --- */
-      .cheat-table th {
-        font-size: 0.75rem;
-        letter-spacing: 0.05em;
-        color: #a1a1aa;
-        font-weight: 700;
-        padding: 12px;
-        border-bottom: 1px solid #27272a;
-      }
-      .cheat-table td {
-        padding: 12px;
-        border-bottom: 1px solid #27272a;
-        font-size: 0.9rem;
-        vertical-align: top;
-      }
-      .cheat-table tr:last-child td {
-        border-bottom: none;
-      }
-      .cheat-scenario {
-        font-weight: 500;
-        color: #e4e4e7;
-      }
-      .cheat-solution {
-        color: #fcd34d;
-        font-family: "JetBrains Mono", monospace;
-        font-weight: 700;
-      }
-      .cheat-logic {
-        color: #d6d3d1;
-        font-style: italic;
-        font-size: 0.85rem;
-      }
-
-      /* --- CODEX STYLES --- */
-      .codex-card {
-        background-color: #18181b;
-        border: 1px solid #27272a;
-        border-radius: 16px;
-        padding: 32px;
-        margin-bottom: 32px;
-        transition: all 0.2s ease;
-      }
-      .codex-card:hover {
-        border-color: #fbbf24;
-        box-shadow: 0 0 20px rgba(251, 191, 36, 0.05);
-      }
-      .boring-def {
-        border-left: 2px solid #52525b;
-        padding-left: 16px;
-        color: #a1a1aa;
-        font-size: 0.95rem;
-        margin-bottom: 16px;
-        font-style: italic;
-        line-height: 1.6;
-      }
-      .atlas-trans {
-        background: linear-gradient(to right, #2a1b0e, #18181b);
-        border-left: 4px solid #d97706;
-        padding: 20px;
-        border-radius: 0 12px 12px 0;
-        color: #fbbf24;
-        font-weight: 500;
-        line-height: 1.6;
-        position: relative;
-      }
-      .atlas-label {
-        position: absolute;
-        top: -10px;
-        left: 16px;
-        background: #d97706;
-        color: black;
-        font-size: 0.65rem;
-        font-weight: 900;
-        padding: 2px 8px;
-        border-radius: 4px;
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-      }
-
-      /* Chat */
-      .chat-container {
-        height: 600px;
-        display: flex;
-        flex-direction: column;
-        background: #18181b;
-        border-radius: 16px;
-        border: 1px solid #27272a;
-        overflow: hidden;
-      }
-      .chat-messages {
-        flex-grow: 1;
-        padding: 20px;
-        overflow-y: auto;
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-      }
-      .chat-input-area {
-        padding: 16px;
-        background: #27272a;
-        display: flex;
-        gap: 10px;
-        border-top: 1px solid #3f3f46;
-      }
-      .msg {
-        padding: 12px 16px;
-        border-radius: 12px;
-        max-width: 80%;
-        font-size: 0.9rem;
-        line-height: 1.5;
-        word-wrap: break-word;
-      }
-      .msg-user {
-        align-self: flex-end;
-        background: #2a1b0e;
-        border: 1px solid #d97706;
-        color: white;
-      }
-      .msg-ai {
-        align-self: flex-start;
-        background: #27272a;
-        border: 1px solid #3f3f46;
-        color: #d4d4d8;
-      }
-      .typing-dot {
-        display: inline-block;
-        width: 6px;
-        height: 6px;
-        background: #d4d4d8;
-        border-radius: 50%;
-        margin: 0 2px;
-        animation: bounce 1.4s infinite ease-in-out both;
-      }
-      .typing-dot:nth-child(1) {
-        animation-delay: -0.32s;
-      }
-      .typing-dot:nth-child(2) {
-        animation-delay: -0.16s;
-      }
-      @keyframes bounce {
-        0%,
-        80%,
-        100% {
-          transform: scale(0);
-        }
-        40% {
-          transform: scale(1);
-        }
-      }
-
-      /* Options */
-      .option-btn {
-        width: 100%;
-        text-align: left;
-        background-color: #27272a;
-        border: 1px solid #3f3f46;
-        padding: 12px;
-        margin-bottom: 8px;
-        border-radius: 10px;
-        font-size: 0.85rem;
-        color: #d4d4d8;
-        transition: all 0.1s;
-        display: flex;
-        align-items: flex-start;
-        cursor: pointer;
-        font-family: "JetBrains Mono", monospace;
-      }
-
-      .option-btn span {
-        flex: 1;
-        min-width: 0;
-        word-wrap: break-word;
-        word-break: break-word;
-        white-space: normal;
-      }
-      .option-btn:hover {
-        background-color: #3f3f46;
-        transform: scale(1.02);
-      }
-      .option-btn:active {
-        transform: scale(0.98);
-      }
-      .option-circle {
-        width: 20px;
-        height: 20px;
-        background-color: #52525b;
-        border-radius: 4px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        font-size: 0.7rem;
-        margin-right: 12px;
-        flex-shrink: 0;
-        font-family: "Inter", sans-serif;
-        margin-top: 2px;
-      }
-      .correct-answer {
-        background-color: #065f46 !important;
-        border-color: #10b981 !important;
-        color: white !important;
-      }
-      .wrong-answer {
-        background-color: #7f1d1d !important;
-        border-color: #ef4444 !important;
-        color: white !important;
-        animation: shake 0.4s both;
-      }
-      .disabled-opts {
-        pointer-events: none;
-        opacity: 0.6;
-      }
-      .locked-blur {
-        filter: blur(8px);
-        user-select: none;
-        transition: filter 0.5s ease;
-      }
-      .unlocked {
-        filter: blur(0);
-      }
-      @keyframes shake {
-        10%,
-        90% {
-          transform: translate3d(-1px, 0, 0);
-        }
-        20%,
-        80% {
-          transform: translate3d(2px, 0, 0);
-        }
-        30%,
-        50%,
-        70% {
-          transform: translate3d(-4px, 0, 0);
-        }
-        40%,
-        60% {
-          transform: translate3d(4px, 0, 0);
-        }
-      }
-
-      .category-pill {
-        font-family: "JetBrains Mono", monospace;
-        font-size: 0.65rem;
-        text-transform: uppercase;
-        padding: 4px 8px;
-        border-radius: 4px;
-        background: #451a03;
-        color: #fbbf24;
-        border: 1px solid #92400e;
-      }
-      .stat-box {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 0 16px;
-      }
-      .stat-value {
-        font-family: "JetBrains Mono", monospace;
-        font-weight: bold;
-        font-size: 1.2rem;
-      }
-      .stat-label {
-        font-size: 0.65rem;
-        text-transform: uppercase;
-        color: #71717a;
-        letter-spacing: 0.1em;
-      }
-      .nav-active {
-        color: #fbbf24 !important;
-        border-bottom: 2px solid #fbbf24;
-      }
-      #api-modal {
-        background: rgba(0, 0, 0, 0.8);
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 100;
-        display: none;
-        justify-content: center;
-        align-items: center;
-      }
+        /* [STYLES UNCHANGED - KEEPING EXISTING STYLES FOR CONSISTENCY] */
+        body { font-family: 'Inter', sans-serif; background-color: #09090b; color: #e4e4e7; overflow-x: hidden; }
+        .glass-panel { background: rgba(24, 24, 27, 0.85); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2); }
+        .phone-frame { width: 360px; height: 650px; background-color: #18181b; border-radius: 30px; position: relative; overflow: hidden; display: flex; flex-direction: column; border: 1px solid #27272a; transition: all 0.3s ease; }
+        .phone-frame:hover { border-color: #d97706; transform: translateY(-2px); box-shadow: 0 10px 40px -10px rgba(217, 119, 6, 0.2); }
+        code { font-family: 'JetBrains Mono', monospace; background: #000; padding: 2px 4px; border-radius: 4px; color: #fcd34d; font-size: 0.8em; word-break: break-word; }
+        pre { background: #0c0a09; padding: 12px; border-radius: 8px; border: 1px solid #292524; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #a8a29e; margin-bottom: 12px; white-space: pre-wrap; word-break: break-all; max-width: 100%; }
+        .cheat-table th { font-size: 0.75rem; letter-spacing: 0.05em; color: #a1a1aa; font-weight: 700; padding: 12px; border-bottom: 1px solid #27272a; }
+        .cheat-table td { padding: 12px; border-bottom: 1px solid #27272a; font-size: 0.9rem; vertical-align: top; }
+        .cheat-table tr:last-child td { border-bottom: none; }
+        .cheat-scenario { font-weight: 500; color: #e4e4e7; }
+        .cheat-solution { color: #fcd34d; font-family: 'JetBrains Mono', monospace; font-weight: 700; }
+        .cheat-logic { color: #d6d3d1; font-style: italic; font-size: 0.85rem; }
+        .codex-card { background-color: #18181b; border: 1px solid #27272a; border-radius: 16px; padding: 32px; margin-bottom: 32px; transition: all 0.2s ease; }
+        .codex-card:hover { border-color: #fbbf24; box-shadow: 0 0 20px rgba(251, 191, 36, 0.05); }
+        .topic-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #27272a; }
+        .boring-def { border-left: 2px solid #52525b; padding-left: 16px; color: #a1a1aa; font-size: 0.95rem; margin-bottom: 16px; font-style: italic; line-height: 1.6; }
+        .atlas-trans { background: linear-gradient(to right, #2a1b0e, #18181b); border-left: 4px solid #d97706; padding: 20px; border-radius: 0 12px 12px 0; color: #fbbf24; font-weight: 500; line-height: 1.6; position: relative; }
+        .atlas-label { position: absolute; top: -10px; left: 16px; background: #d97706; color: black; font-size: 0.65rem; font-weight: 900; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.1em; }
+        .chat-container { height: 600px; display: flex; flex-direction: column; background: #18181b; border-radius: 16px; border: 1px solid #27272a; overflow: hidden; }
+        .chat-messages { flex-grow: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
+        .chat-input-area { padding: 16px; background: #27272a; display: flex; gap: 10px; border-top: 1px solid #3f3f46; }
+        .msg { padding: 12px 16px; border-radius: 12px; max-width: 80%; font-size: 0.9rem; line-height: 1.5; word-wrap: break-word; }
+        .msg-user { align-self: flex-end; background: #2a1b0e; border: 1px solid #d97706; color: white; }
+        .msg-ai { align-self: flex-start; background: #27272a; border: 1px solid #3f3f46; color: #d4d4d8; }
+        .typing-dot { display: inline-block; width: 6px; height: 6px; background: #d4d4d8; border-radius: 50%; margin: 0 2px; animation: bounce 1.4s infinite ease-in-out both; }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; } .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+        .option-btn { width: 100%; text-align: left; background-color: #27272a; border: 1px solid #3f3f46; padding: 12px; margin-bottom: 8px; border-radius: 10px; font-size: 0.85rem; color: #d4d4d8; transition: all 0.1s; display: flex; align-items: flex-start; cursor: pointer; font-family: 'JetBrains Mono', monospace; }
+        .option-btn span { flex: 1; min-width: 0; word-wrap: break-word; word-break: break-word; white-space: normal; }
+        .option-btn:hover { background-color: #3f3f46; transform: scale(1.02); }
+        .option-btn:active { transform: scale(0.98); }
+        .option-circle { width: 20px; height: 20px; background-color: #52525b; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.7rem; margin-right: 12px; flex-shrink: 0; font-family: 'Inter', sans-serif; margin-top: 2px; }
+        .correct-answer { background-color: #065f46 !important; border-color: #10b981 !important; color: white !important; }
+        .wrong-answer { background-color: #7f1d1d !important; border-color: #ef4444 !important; color: white !important; animation: shake 0.4s both; }
+        .disabled-opts { pointer-events: none; opacity: 0.6; }
+        .locked-blur { filter: blur(8px); user-select: none; transition: filter 0.5s ease; }
+        .unlocked { filter: blur(0); }
+        @keyframes shake { 10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); } }
+        .category-pill { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; text-transform: uppercase; padding: 4px 8px; border-radius: 4px; background: #451a03; color: #fbbf24; border: 1px solid #92400e; }
+        .stat-box { display: flex; flex-direction: column; align-items: center; padding: 0 16px; }
+        .stat-value { font-family: 'JetBrains Mono', monospace; font-weight: bold; font-size: 1.2rem; }
+        .stat-label { font-size: 0.65rem; text-transform: uppercase; color: #71717a; letter-spacing: 0.1em; }
+        .nav-active { color: #fbbf24 !important; border-bottom: 2px solid #fbbf24; }
+        #api-modal { background: rgba(0,0,0,0.8); position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 100; display: none; justify-content: center; align-items: center; }
     </style>
-  </head>
-  <body class="min-h-screen flex flex-col items-center py-6">
+</head>
+<body class="min-h-screen flex flex-col items-center py-6">
+
     <!-- API Key Modal -->
     <div id="api-modal">
-      <div
-        class="bg-[#18181b] border border-stone-700 p-8 rounded-2xl max-w-md w-full shadow-2xl"
-      >
-        <h2 class="text-xl font-bold text-white mb-2" id="modal-title">
-          🔑 Configure Gemini API
-        </h2>
-        <p class="text-stone-400 text-sm mb-4" id="modal-desc">
-          Enter your Google Gemini API Key to enable AI features. Stored
-          locally.
-        </p>
-        <input
-          type="password"
-          id="api-key-input"
-          placeholder="Paste API Key here..."
-          class="w-full bg-black border border-stone-700 rounded-lg p-3 text-white mb-4 focus:border-amber-500 outline-none"
-        />
-        <div class="flex justify-end gap-3">
-          <button
-            onclick="closeApiModal()"
-            class="text-stone-400 hover:text-white text-sm"
-            id="modal-cancel"
-          >
-            Cancel
-          </button>
-          <button
-            onclick="saveApiKey()"
-            class="bg-amber-600 hover:bg-amber-500 text-black font-bold py-2 px-4 rounded-lg transition"
-            id="modal-save"
-          >
-            Save Key
-          </button>
+        <div class="bg-[#18181b] border border-stone-700 p-8 rounded-2xl max-w-md w-full shadow-2xl">
+            <h2 class="text-xl font-bold text-white mb-2" id="modal-title">🔑 Configure Gemini API</h2>
+            <p class="text-stone-400 text-sm mb-4" id="modal-desc">Enter your Google Gemini API Key to enable AI features. Stored locally.</p>
+            <input type="password" id="api-key-input" placeholder="Paste API Key here..." class="w-full bg-black border border-stone-700 rounded-lg p-3 text-white mb-4 focus:border-amber-500 outline-none">
+            <div class="flex justify-end gap-3">
+                <button onclick="closeApiModal()" class="text-stone-400 hover:text-white text-sm" id="modal-cancel">Cancel</button>
+                <button onclick="saveApiKey()" class="bg-amber-600 hover:bg-amber-500 text-black font-bold py-2 px-4 rounded-lg transition" id="modal-save">Save Key</button>
+            </div>
         </div>
-      </div>
     </div>
 
     <!-- HEADER -->
-    <div
-      class="fixed top-0 z-50 w-full bg-[#09090b]/90 backdrop-blur-md border-b border-white/10"
-    >
-      <div
-        class="max-w-6xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-4"
-      >
-        <div class="flex items-center gap-8">
-          <div class="text-left">
-            <h1 class="text-xl font-bold text-white tracking-tight">
-              DP-600 <span class="text-amber-500">ATLAS</span>
-            </h1>
-          </div>
-          <div
-            class="flex gap-6 text-sm font-bold tracking-widest text-stone-500"
-          >
-            <button
-              onclick="switchView('simulator')"
-              id="nav-sim"
-              class="hover:text-white transition py-2 nav-active"
-            >
-              SIMULATOR
-            </button>
-            <button
-              onclick="switchView('coach')"
-              id="nav-coach"
-              class="hover:text-white transition py-2 flex items-center gap-1"
-            >
-              AI COACH <span class="text-[10px] text-amber-500">✨</span>
-            </button>
-            <button
-              onclick="switchView('codex')"
-              id="nav-codex"
-              class="hover:text-white transition py-2"
-            >
-              CODEX
-            </button>
-            <button
-              onclick="switchView('cheatsheet')"
-              id="nav-cheat"
-              class="hover:text-white transition py-2"
-            >
-              CHEAT SHEET
-            </button>
-          </div>
-        </div>
-
-        <div id="sim-filters" class="flex bg-white/5 rounded-lg p-1">
-          <button
-            onclick="setMode('all')"
-            id="btn-all"
-            class="px-3 py-1 text-xs font-bold rounded hover:text-white transition text-amber-500 bg-white/10"
-          >
-            ALL
-          </button>
-          <button
-            onclick="setMode('core')"
-            id="btn-core"
-            class="px-3 py-1 text-xs font-bold rounded text-stone-400 hover:text-white transition"
-          >
-            CORE
-          </button>
-          <button
-            onclick="setMode('boss')"
-            id="btn-boss"
-            class="px-3 py-1 text-xs font-bold rounded text-stone-400 hover:text-white transition"
-          >
-            BOSS
-          </button>
-          <button
-            onclick="setMode('code')"
-            id="btn-code"
-            class="px-3 py-1 text-xs font-bold rounded text-cyan-400 hover:text-white transition border border-cyan-900/50 ml-1"
-          >
-            CODE
-          </button>
-        </div>
-
-        <div class="flex items-center gap-2">
-          <!-- NAVIGATION ARROWS -->
-          <button
-            onclick="prevQuestion()"
-            class="w-8 h-8 flex items-center justify-center rounded-full bg-stone-800 text-stone-400 hover:bg-stone-700 hover:text-white transition border border-stone-700"
-            title="Previous Question"
-          >
-            ←
-          </button>
-          <button
-            onclick="nextQuestion()"
-            class="w-8 h-8 flex items-center justify-center rounded-full bg-stone-800 text-stone-400 hover:bg-stone-700 hover:text-white transition border border-stone-700 mr-2"
-            title="Next Question"
-          >
-            →
-          </button>
-
-          <div class="stat-box">
-            <span id="score-display" class="stat-value text-emerald-400">0</span
-            ><span class="stat-label">XP</span>
-          </div>
-          <div class="h-6 w-px bg-white/10"></div>
-          <div class="stat-box">
-            <span id="streak-display" class="stat-value text-amber-500">0</span
-            ><span class="stat-label">Streak</span>
-          </div>
-
-          <div class="h-6 w-px bg-white/10 ml-2"></div>
-          <!-- Language Toggle -->
-          <button
-            onclick="toggleLanguage()"
-            class="text-xl hover:scale-110 transition p-2"
-            title="Switch Language"
-            id="lang-btn"
-          >
-            🇸🇪
-          </button>
-
-          <button
-            onclick="openApiModal()"
-            class="text-xs text-stone-500 hover:text-amber-400 transition p-2"
-            title="API Settings"
-          >
-            ⚙️
-          </button>
-          <button
-            onclick="resetProgress()"
-            class="text-xs text-stone-500 hover:text-red-400 transition p-2"
-            title="Reset Data"
-          >
-            ↺
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- VIEW: SIMULATOR -->
-    <div
-      id="view-simulator"
-      class="w-full max-w-[1400px] mt-24 px-4 transition-opacity duration-300"
-    >
-      <div
-        class="flex flex-col xl:flex-row gap-6 items-center justify-center mb-10"
-      >
-        <!-- Question Card -->
-        <div class="relative group">
-          <div
-            class="absolute -top-3 left-1/2 -translate-x-1/2 bg-amber-600 text-black text-[10px] font-bold px-3 py-1 rounded-full z-10 tracking-widest"
-            id="label-mission"
-          >
-            MISSION
-          </div>
-          <div id="card-question" class="phone-frame p-6"></div>
-          <div
-            id="nav-overlay"
-            class="absolute bottom-6 left-0 w-full px-6 hidden z-20 flex gap-2"
-          >
-            <button
-              onclick="generateAIQuestion()"
-              id="btn-ai-gen"
-              class="flex-1 bg-purple-900/80 border border-purple-500 text-white font-bold py-3 rounded-xl hover:bg-purple-800 transition shadow-lg flex justify-center items-center gap-2 text-xs"
-            >
-              <span>✨</span> NEW SCENARIO
-            </button>
-            <button
-              onclick="nextQuestion()"
-              id="btn-next"
-              class="flex-[2] bg-white text-black font-bold py-3 rounded-xl hover:bg-amber-400 transition shadow-lg transform hover:scale-105 flex justify-center items-center gap-2"
-            >
-              NEXT <span>→</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Answer Card -->
-        <div class="relative group w-full xl:w-auto flex justify-center">
-          <div
-            class="absolute -top-3 left-1/2 -translate-x-1/2 bg-stone-700 text-stone-300 text-[10px] font-bold px-3 py-1 rounded-full z-10 tracking-widest z-20"
-            id="label-intel"
-          >
-            INTEL
-          </div>
-          <div id="card-answer" class="phone-frame p-6 relative">
-            <div
-              id="lock-overlay-a"
-              class="absolute inset-0 flex flex-col items-center justify-center z-10 transition-opacity duration-500"
-            >
-              <div class="text-4xl mb-2">🔒</div>
-              <p class="text-xs font-mono text-stone-500 uppercase">
-                Classified Intel
-              </p>
+    <div class="fixed top-0 z-50 w-full bg-[#09090b]/90 backdrop-blur-md border-b border-white/10">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-8">
+                <div class="text-left">
+                    <h1 class="text-xl font-bold text-white tracking-tight">DP-600 <span class="text-amber-500">ATLAS</span></h1>
+                </div>
+                <div class="flex gap-6 text-sm font-bold tracking-widest text-stone-500">
+                    <button onclick="switchView('simulator')" id="nav-sim" class="hover:text-white transition py-2 nav-active">SIMULATOR</button>
+                    <button onclick="switchView('coach')" id="nav-coach" class="hover:text-white transition py-2 flex items-center gap-1">AI COACH <span class="text-[10px] text-amber-500">✨</span></button>
+                    <button onclick="switchView('codex')" id="nav-codex" class="hover:text-white transition py-2">CODEX</button>
+                    <button onclick="switchView('cheatsheet')" id="nav-cheat" class="hover:text-white transition py-2">CHEAT SHEET</button>
+                </div>
             </div>
-            <div
-              id="content-answer"
-              class="locked-blur h-full flex flex-col"
-            ></div>
-          </div>
-        </div>
-
-        <!-- Grandma Card -->
-        <div class="relative group w-full xl:w-auto flex justify-center">
-          <div
-            class="absolute -top-3 left-1/2 -translate-x-1/2 bg-stone-700 text-stone-300 text-[10px] font-bold px-3 py-1 rounded-full z-10 tracking-widest z-20"
-            id="label-strategy"
-          >
-            STRATEGY
-          </div>
-          <div id="card-grandma" class="phone-frame p-6 relative">
-            <div
-              id="lock-overlay-b"
-              class="absolute inset-0 flex flex-col items-center justify-center z-10 transition-opacity duration-500"
-            >
-              <div class="text-4xl mb-2">🧠</div>
-              <p class="text-xs font-mono text-stone-500 uppercase">
-                Brain Link
-              </p>
+            
+            <div id="sim-filters" class="flex bg-white/5 rounded-lg p-1">
+                <button onclick="setMode('all')" id="btn-all" class="px-3 py-1 text-xs font-bold rounded hover:text-white transition text-amber-500 bg-white/10">ALL</button>
+                <button onclick="setMode('core')" id="btn-core" class="px-3 py-1 text-xs font-bold rounded text-stone-400 hover:text-white transition">CORE</button>
+                <button onclick="setMode('boss')" id="btn-boss" class="px-3 py-1 text-xs font-bold rounded text-stone-400 hover:text-white transition">BOSS</button>
+                <button onclick="setMode('code')" id="btn-code" class="px-3 py-1 text-xs font-bold rounded text-cyan-400 hover:text-white transition border border-cyan-900/50 ml-1">CODE</button>
             </div>
-            <div
-              id="content-grandma"
-              class="locked-blur h-full flex flex-col items-center text-center justify-center"
-            ></div>
-          </div>
+
+            <div class="flex items-center gap-2">
+                <button onclick="prevQuestion()" class="w-8 h-8 flex items-center justify-center rounded-full bg-stone-800 text-stone-400 hover:bg-stone-700 hover:text-white transition border border-stone-700" title="Previous">←</button>
+                <button onclick="nextQuestion()" class="w-8 h-8 flex items-center justify-center rounded-full bg-stone-800 text-stone-400 hover:bg-stone-700 hover:text-white transition border border-stone-700 mr-2" title="Next">→</button>
+                
+                <div class="stat-box"><span id="score-display" class="stat-value text-emerald-400">0</span><span class="stat-label">XP</span></div>
+                <div class="stat-box"><span id="streak-display" class="stat-value text-amber-500">0</span><span class="stat-label">Streak</span></div>
+                
+                <div class="h-6 w-px bg-white/10 ml-2"></div>
+                <button onclick="toggleLanguage()" class="text-xl hover:scale-110 transition p-2" title="Switch Language" id="lang-btn">🇸🇪</button>
+                <button onclick="openApiModal()" class="text-xs text-stone-500 hover:text-amber-400 transition p-2" title="API Settings">⚙️</button>
+                <button onclick="resetProgress()" class="text-xs text-stone-500 hover:text-red-400 transition p-2" title="Reset Data">↺</button>
+            </div>
         </div>
-      </div>
     </div>
 
-    <!-- VIEW: AI COACH -->
-    <div
-      id="view-coach"
-      class="w-full max-w-3xl mx-auto mt-24 px-4 hidden mb-20"
-    >
-      <div class="text-center mb-8">
-        <h2
-          class="text-4xl font-black text-white mb-2 tracking-tight flex justify-center items-center gap-3"
-        >
-          <span class="text-amber-500">✨</span> ATLAS COACH
-        </h2>
-        <p class="text-stone-400" id="coach-subtitle">
-          Ask me anything about DP-600. I speak "Grandma".
-        </p>
-      </div>
-      <div class="chat-container">
-        <div id="chat-messages" class="chat-messages">
-          <div class="msg msg-ai" id="coach-welcome">
-            👋 <strong>Atlas här.</strong> Jag är din externa hjärna. Fråga mig
-            om Fabric, DirectLake, eller be mig förklara T-SQL som om du vore 5
-            år.
-          </div>
+    <!-- MAIN VIEWS -->
+    <div id="view-simulator" class="w-full max-w-[1400px] mt-24 px-4 transition-opacity duration-300">
+        <div class="flex flex-col xl:flex-row gap-6 items-center justify-center mb-10">
+            <div class="relative group">
+                <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-amber-600 text-black text-[10px] font-bold px-3 py-1 rounded-full z-10 tracking-widest" id="label-mission">MISSION</div>
+                <div id="card-question" class="phone-frame p-6"></div>
+                <div id="nav-overlay" class="absolute bottom-6 left-0 w-full px-6 hidden z-20 flex gap-2">
+                    <button onclick="generateAIQuestion()" id="btn-ai-gen" class="flex-1 bg-purple-900/80 border border-purple-500 text-white font-bold py-3 rounded-xl hover:bg-purple-800 transition shadow-lg flex justify-center items-center gap-2 text-xs"><span>✨</span> NEW SCENARIO</button>
+                    <button onclick="nextQuestion()" id="btn-next" class="flex-[2] bg-white text-black font-bold py-3 rounded-xl hover:bg-amber-400 transition shadow-lg transform hover:scale-105 flex justify-center items-center gap-2">NEXT <span>→</span></button>
+                </div>
+            </div>
+            <div class="relative group w-full xl:w-auto flex justify-center">
+                <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-stone-700 text-stone-300 text-[10px] font-bold px-3 py-1 rounded-full z-10 tracking-widest z-20" id="label-intel">INTEL</div>
+                <div id="card-answer" class="phone-frame p-6 relative">
+                    <div id="lock-overlay-a" class="absolute inset-0 flex flex-col items-center justify-center z-10 transition-opacity duration-500"><div class="text-4xl mb-2">🔒</div><p class="text-xs font-mono text-stone-500 uppercase">Classified Intel</p></div>
+                    <div id="content-answer" class="locked-blur h-full flex flex-col"></div>
+                </div>
+            </div>
+            <div class="relative group w-full xl:w-auto flex justify-center">
+                <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-stone-700 text-stone-300 text-[10px] font-bold px-3 py-1 rounded-full z-10 tracking-widest z-20" id="label-strategy">STRATEGY</div>
+                <div id="card-grandma" class="phone-frame p-6 relative">
+                    <div id="lock-overlay-b" class="absolute inset-0 flex flex-col items-center justify-center z-10 transition-opacity duration-500"><div class="text-4xl mb-2">🧠</div><p class="text-xs font-mono text-stone-500 uppercase">Brain Link</p></div>
+                    <div id="content-grandma" class="locked-blur h-full flex flex-col items-center text-center justify-center"></div>
+                </div>
+            </div>
         </div>
-        <div class="chat-input-area">
-          <input
-            type="text"
-            id="chat-input"
-            placeholder="Fråga Atlas..."
-            class="flex-grow bg-black border border-stone-700 rounded-lg p-3 text-white focus:border-amber-500 outline-none"
-            onkeypress="handleEnter(event)"
-          />
-          <button
-            onclick="sendChatMessage()"
-            class="bg-amber-600 hover:bg-amber-500 text-black font-bold p-3 rounded-lg transition"
-          >
-            ➤
-          </button>
-        </div>
-      </div>
     </div>
 
-    <!-- VIEW: THE CODEX -->
-    <div
-      id="view-codex"
-      class="w-full max-w-4xl mx-auto mt-24 px-4 hidden mb-20"
-    >
-      <div class="text-center mb-12">
-        <h2 class="text-4xl font-black text-white mb-2 tracking-tight">
-          THE ATLAS CODEX
-        </h2>
-        <p class="text-stone-400" id="codex-subtitle">
-          Mastery through Simplification.
-        </p>
-      </div>
-      <div id="codex-content" class="space-y-8"></div>
+    <div id="view-coach" class="w-full max-w-3xl mx-auto mt-24 px-4 hidden mb-20">
+        <div class="text-center mb-8"><h2 class="text-4xl font-black text-white mb-2 tracking-tight flex justify-center items-center gap-3"><span class="text-amber-500">✨</span> ATLAS COACH</h2><p class="text-stone-400" id="coach-subtitle">Ask me anything about DP-600.</p></div>
+        <div class="chat-container">
+            <div id="chat-messages" class="chat-messages"><div class="msg msg-ai" id="coach-welcome">👋 <strong>Atlas här.</strong></div></div>
+            <div class="chat-input-area"><input type="text" id="chat-input" placeholder="Fråga Atlas..." class="flex-grow bg-black border border-stone-700 rounded-lg p-3 text-white focus:border-amber-500 outline-none" onkeypress="handleEnter(event)"><button onclick="sendChatMessage()" class="bg-amber-600 hover:bg-amber-500 text-black font-bold p-3 rounded-lg transition">➤</button></div>
+        </div>
     </div>
 
-    <!-- VIEW: CHEAT SHEET -->
-    <div
-      id="view-cheatsheet"
-      class="w-full max-w-5xl mx-auto mt-24 px-4 hidden mb-20"
-    >
-      <div class="text-center mb-12">
-        <h2 class="text-4xl font-black text-white mb-2 tracking-tight">
-          ARCHITECT'S CHEAT SHEET
-        </h2>
-        <p class="text-stone-400" id="cheat-subtitle">
-          Your Logical Compass: "If X happens -> Do Y"
-        </p>
-      </div>
-      <div class="grid gap-12" id="cheat-content">
-        <!-- Content Injected via JS -->
-      </div>
+    <div id="view-codex" class="w-full max-w-4xl mx-auto mt-24 px-4 hidden mb-20">
+        <div class="text-center mb-12"><h2 class="text-4xl font-black text-white mb-2 tracking-tight">THE ATLAS CODEX</h2><p class="text-stone-400" id="codex-subtitle">Mastery through Simplification.</p></div>
+        <div id="codex-content" class="space-y-8"></div>
+    </div>
+
+    <div id="view-cheatsheet" class="w-full max-w-5xl mx-auto mt-24 px-4 hidden mb-20">
+        <div class="text-center mb-12"><h2 class="text-4xl font-black text-white mb-2 tracking-tight">ARCHITECT'S CHEAT SHEET</h2><p class="text-stone-400" id="cheat-subtitle">Your Logical Compass.</p></div>
+        <div class="grid gap-12" id="cheat-content"></div>
     </div>
 
     <script>
-      // ==========================================
-      //  LOCALIZATION ENGINE
-      // ==========================================
-      const langData = {
-        sv: {
-          nav_sim: "SIMULATOR",
-          nav_coach: "AI COACH",
-          nav_codex: "CODEX",
-          nav_cheat: "LATHUND",
-          btn_all: "ALLA",
-          btn_core: "GRUND",
-          btn_boss: "BOSS",
-          btn_code: "KOD",
-          label_mission: "UPPDRAG",
-          label_intel: "INTEL",
-          label_strategy: "STRATEGI",
-          btn_next: "NÄSTA",
-          btn_ai_gen: "NYTT SCENARIO",
-          coach_sub: "Ställ frågor om DP-600. Jag pratar 'Mormors-språk'.",
-          coach_wel:
-            "👋 <strong>Atlas här.</strong> Jag är din externa hjärna. Fråga mig om Fabric, DirectLake, eller be mig förklara T-SQL som om du vore 5 år.",
-          coach_ph: "Fråga Atlas...",
-          codex_sub: "Bemästra genom förenkling.",
-          cheat_sub: "Din Logiska Kompass: 'Om X händer -> Gör Y'",
-          cheat_th_sc: "Scenario",
-          cheat_th_sol: "Lösning",
-          cheat_th_log: "Atlas Logik",
-          label_atlas_says: "ATLAS SÄGER",
-          label_senior: "Senior Arkitekt Tips",
-          label_grandma: "Mormors-regeln",
-          label_solution: "LÖSNING",
-          label_strategic_rules: "⚡ Atlas Strategiska Tumregler",
-        },
-        en: {
-          nav_sim: "SIMULATOR",
-          nav_coach: "AI COACH",
-          nav_codex: "CODEX",
-          nav_cheat: "CHEAT SHEET",
-          btn_all: "ALL",
-          btn_core: "CORE",
-          btn_boss: "BOSS",
-          btn_code: "CODE",
-          label_mission: "MISSION",
-          label_intel: "INTEL",
-          label_strategy: "STRATEGY",
-          btn_next: "NEXT",
-          btn_ai_gen: "NEW SCENARIO",
-          coach_sub: "Ask me anything about DP-600. I speak 'Grandma'.",
-          coach_wel:
-            "👋 <strong>Atlas here.</strong> I am your external brain. Ask me about Fabric, DirectLake, or ask me to explain T-SQL like you're 5.",
-          coach_ph: "Ask Atlas...",
-          codex_sub: "Mastery through Simplification.",
-          cheat_sub: "Your Logical Compass: 'If X happens -> Do Y'",
-          cheat_th_sc: "Scenario",
-          cheat_th_sol: "Solution",
-          cheat_th_log: "Atlas Logic",
-          label_atlas_says: "ATLAS SAYS",
-          label_senior: "Senior Architect Tip",
-          label_grandma: "The Grandma Rule",
-          label_solution: "SOLUTION",
-          label_strategic_rules: "⚡ Atlas Strategic Rules",
-        },
-      };
+        const langData = {
+            sv: {
+                nav_sim: "SIMULATOR", nav_coach: "AI COACH", nav_codex: "CODEX", nav_cheat: "LATHUND",
+                btn_all: "ALLA", btn_core: "GRUND", btn_boss: "BOSS", btn_code: "KOD",
+                label_mission: "UPPDRAG", label_intel: "INTEL", label_strategy: "STRATEGI",
+                btn_next: "NÄSTA", btn_ai_gen: "NYTT SCENARIO",
+                coach_sub: "Ställ frågor om DP-600. Jag pratar 'Mormors-språk'.",
+                coach_wel: "👋 <strong>Atlas här.</strong> Jag är din externa hjärna. Fråga mig om Fabric, DirectLake, eller be mig förklara T-SQL som om du vore 5 år.",
+                coach_ph: "Fråga Atlas...",
+                codex_sub: "Bemästra genom förenkling.",
+                cheat_sub: "Din Logiska Kompass: 'Om X händer -> Gör Y'",
+                cheat_th_sc: "Scenario", cheat_th_sol: "Lösning", cheat_th_log: "Atlas Logik",
+                label_atlas_says: "ATLAS SÄGER", label_senior: "Senior Arkitekt Tips", label_grandma: "Mormors-regeln",
+                label_solution: "LÖSNING", label_strategic_rules: "⚡ Atlas Strategiska Tumregler"
+            },
+            en: {
+                nav_sim: "SIMULATOR", nav_coach: "AI COACH", nav_codex: "CODEX", nav_cheat: "CHEAT SHEET",
+                btn_all: "ALL", btn_core: "CORE", btn_boss: "BOSS", btn_code: "CODE",
+                label_mission: "MISSION", label_intel: "INTEL", label_strategy: "STRATEGY",
+                btn_next: "NEXT", btn_ai_gen: "NEW SCENARIO",
+                coach_sub: "Ask me anything about DP-600. I speak 'Grandma'.",
+                coach_wel: "👋 <strong>Atlas here.</strong> I am your external brain. Ask me about Fabric, DirectLake, or ask me to explain T-SQL like you're 5.",
+                coach_ph: "Ask Atlas...",
+                codex_sub: "Mastery through Simplification.",
+                cheat_sub: "Your Logical Compass: 'If X happens -> Do Y'",
+                cheat_th_sc: "Scenario", cheat_th_sol: "Solution", cheat_th_log: "Atlas Logic",
+                label_atlas_says: "ATLAS SAYS", label_senior: "Senior Architect Tip", label_grandma: "The Grandma Rule",
+                label_solution: "SOLUTION", label_strategic_rules: "⚡ Atlas Strategic Rules"
+            }
+        };
 
-      // ==========================================
-      //  DATABASE: FULL QUESTION BANK
-      // ==========================================
-      const questionBank = [
-        // --- CORE 1-5 (Examples) ---
-        {
-          id: 1,
-          type: "core",
-          cat: "Fabric Capacity",
-          icon: "🪣",
-          q: "Vad är 'Bursting'?",
-          scenario:
-            "CPU-användningen slår i taket kl 09:00, men ingen strypning sker. Hur?",
-          opts: [
-            "Fri prestanda",
-            "Lånar från framtiden",
-            "Cache-minne",
-            "Ingen gräns",
-          ],
-          correct: 1,
-          senior:
-            "Bursting lånar resurser, men det är 'Smoothing' som smetar ut fakturan över 24h för att undvika omedelbar strypning.",
-          grandma:
-            "Det är som ett kreditkort. Du kan köpa en dyr TV (tung query) nu, men du måste betala av skulden senare.",
-        },
-        {
-          id: 2,
-          type: "core",
-          cat: "OneLake",
-          icon: "🔗",
-          q: "Analysera S3-data?",
-          scenario:
-            "Kunden har 50TB i AWS. Vill använda Fabric men vägrar betala för migrering.",
-          opts: ["Copy Activity", "Shortcuts", "Mirroring", "Går ej"],
-          correct: 1,
-          senior:
-            "Shortcuts virtualiserar datat. Metadata i OneLake, men bitarna ligger kvar i S3. Zero Copy.",
-          grandma:
-            "Skapa en genväg på skrivbordet. Filen ligger kvar i mappen, men du öppnar den härifrån.",
-        },
-        {
-          id: 3,
-          type: "core",
-          cat: "Security",
-          icon: "🔑",
-          q: "Vem ska vara 'Contributor'?",
-          scenario: "En säljare ska BARA kunna läsa rapporter, inget annat.",
-          opts: ["Contributor", "Member", "Viewer", "Admin"],
-          correct: 2,
-          senior:
-            "Contributor kan redigera/radera. Viewer ger strikt 'Read Only' och aktiverar RLS.",
-          grandma:
-            "Ge inte husnyckeln (Contributor) till någon som bara ska titta genom fönstret (Viewer).",
-        },
-        {
-          id: 4,
-          type: "core",
-          cat: "Git Integration",
-          icon: "🧬",
-          q: "Vilket filformat?",
-          scenario:
-            "Du kopplar Workspace till Azure DevOps. Hur sparas rapporterna?",
-          opts: [".pbix", ".bim", ".pbip (Project)", ".zip"],
-          correct: 2,
-          senior:
-            "Fabric använder PBIP som sparar definitioner i text/JSON, vilket möjliggör diff och merge.",
-          grandma:
-            "Istället för en limmad bok (PBIX) får du en pärm med lösa blad (JSON) som kan bytas ut ett och ett.",
-        },
-        {
-          id: 5,
-          type: "core",
-          cat: "Admin Portal",
-          icon: "🛑",
-          q: "Stoppa användare att skapa items?",
-          scenario: "Du vill hindra alla från att skapa nya Workspaces.",
-          opts: [
-            "Kapacitetsinställning",
-            "Tenant Setting",
-            "Workspace Setting",
-            "AD Group",
-          ],
-          correct: 1,
-          senior:
-            "Tenant Settings är den globala switchen. Kan begränsas till specifika säkerhetsgrupper.",
-          grandma:
-            "Huvudströmbrytaren i proppskåpet styr hela huset, inte bara ett rum.",
-        },
-        {
-          id: 6,
-          type: "core",
-          cat: "Deployment Pipelines",
-          icon: "🚀",
-          q: "Synka Dev till Test?",
-          scenario:
-            "Du har gjort ändringar i Dev. Hur får du över dem till Test säkrast?",
-          opts: [
-            "Manuell uppladdning",
-            "Deployment Pipeline",
-            "Copy Paste",
-            "Save As",
-          ],
-          correct: 1,
-          senior:
-            "Deployment Pipelines hanterar metadata-flytt och parameter-regler (t.ex. byta connection string).",
-          grandma:
-            "Som ett löpande band i fabriken. En knapptryckning flyttar bilen från montering (Dev) till lackering (Test).",
-        },
-        {
-          id: 7,
-          type: "core",
-          cat: "Fabric Domains",
-          icon: "🏷️",
-          q: "Varför använda Domäner?",
-          scenario:
-            "En stor organisation har data för HR, Finans och Sälj i en enda röra.",
-          opts: [
-            "Bättre prestanda",
-            "Logisk gruppering & Governance",
-            "Krävs för Copilot",
-            "Billigare",
-          ],
-          correct: 1,
-          senior:
-            "Domäner tillåter decentraliserat ägarskap. HR kan vara admin för sina workspaces, Finans för sina.",
-          grandma:
-            "Istället för en stor låda med alla leksaker, har vi en låda för Lego (HR) och en för Bilar (Finans).",
-        },
-        {
-          id: 8,
-          type: "core",
-          cat: "Capacity Metrics",
-          icon: "📊",
-          q: "Hitta 'Noisy Neighbor'?",
-          scenario:
-            "Hela kapaciteten är långsam. En specifik rapport drar 90% CPU.",
-          opts: [
-            "Task Manager",
-            "Capacity Metrics App",
-            "Power BI Admin",
-            "Fråga användarna",
-          ],
-          correct: 1,
-          senior:
-            "Metrics App visar exakt vilken 'Item' (Rapport/Notebook) som konsumerar CU över tid.",
-          grandma:
-            "Vem äter upp all tårta? Kolla övervakningskameran (Metrics App) för att hitta den skyldige.",
-        },
-        {
-          id: 9,
-          type: "core",
-          cat: "Storage Modes",
-          icon: "💾",
-          q: "Dyr lagring?",
-          scenario: "Du får slut på lagringsutrymme i din F64 kapacitet.",
-          opts: [
-            "Köp mer RAM",
-            "Lagring är separat från Compute",
-            "Radera rapporter",
-            "Uppgradera till F128",
-          ],
-          correct: 1,
-          senior:
-            "F-SKU betalar för Compute (CU). Lagring (OneLake) debiteras separat per GB (som ADLSg2).",
-          grandma:
-            "Hyran för lägenheten (Compute) är en sak. Kostnaden för möblerna du ställer in (Lagring) är en annan.",
-        },
-        {
-          id: 10,
-          type: "core",
-          cat: "Workspaces",
-          icon: "🏠",
-          q: "Ta bort Workspace?",
-          scenario: "Du raderar ett Workspace. Vad händer med datat i OneLake?",
-          opts: [
-            "Raderas direkt",
-            "Soft Delete (Retention)",
-            "Flyttas till Root",
-            "Arkiveras för evigt",
-          ],
-          correct: 1,
-          senior:
-            "Det hamnar i 'Soft Delete'. Kan återställas inom en viss tid (ofta 7-30 dagar beroende på config).",
-          grandma:
-            "Det hamnar i papperskorgen först. Du kan ångra dig innan sopbilen kommer.",
-        },
+        const questionBank = [
+            // --- CORE 1-20 ---
+            { id: 1, type: "core", cat: "Fabric Capacity", icon: "🪣", q: "Vad är 'Bursting'?", scenario: "CPU-användningen slår i taket kl 09:00, men ingen strypning sker. Hur?", opts: ["Fri prestanda", "Lånar från framtiden", "Cache-minne", "Ingen gräns"], correct: 1, senior: "Bursting lånar resurser, men det är 'Smoothing' som smetar ut fakturan över 24h för att undvika omedelbar strypning.", grandma: "Det är som ett kreditkort. Du kan köpa en dyr TV (tung query) nu, men du måste betala av skulden senare." },
+            { id: 2, type: "core", cat: "OneLake", icon: "🔗", q: "Analysera S3-data?", scenario: "Kunden har 50TB i AWS. Vill använda Fabric men vägrar betala för migrering.", opts: ["Copy Activity", "Shortcuts", "Mirroring", "Går ej"], correct: 1, senior: "Shortcuts virtualiserar datat. Metadata i OneLake, men bitarna ligger kvar i S3. Zero Copy.", grandma: "Skapa en genväg på skrivbordet. Filen ligger kvar i mappen, men du öppnar den härifrån." },
+            { id: 3, type: "core", cat: "Security", icon: "🔑", q: "Vem ska vara 'Contributor'?", scenario: "En säljare ska BARA kunna läsa rapporter, inget annat.", opts: ["Contributor", "Member", "Viewer", "Admin"], correct: 2, senior: "Contributor kan redigera/radera. Viewer ger strikt 'Read Only' och aktiverar RLS.", grandma: "Ge inte husnyckeln (Contributor) till någon som bara ska titta genom fönstret (Viewer)." },
+            { id: 4, type: "core", cat: "Git Integration", icon: "🧬", q: "Vilket filformat?", scenario: "Du kopplar Workspace till Azure DevOps. Hur sparas rapporterna?", opts: [".pbix", ".bim", ".pbip (Project)", ".zip"], correct: 2, senior: "Fabric använder PBIP som sparar definitioner i text/JSON, vilket möjliggör diff och merge.", grandma: "Istället för en limmad bok (PBIX) får du en pärm med lösa blad (JSON) som kan bytas ut ett och ett." },
+            { id: 5, type: "core", cat: "Admin Portal", icon: "🛑", q: "Stoppa användare att skapa items?", scenario: "Du vill hindra alla från att skapa nya Workspaces.", opts: ["Kapacitetsinställning", "Tenant Setting", "Workspace Setting", "AD Group"], correct: 1, senior: "Tenant Settings är den globala switchen. Kan begränsas till specifika säkerhetsgrupper.", grandma: "Huvudströmbrytaren i proppskåpet styr hela huset, inte bara ett rum." },
+            { id: 6, type: "core", cat: "Deployment Pipelines", icon: "🚀", q: "Synka Dev till Test?", scenario: "Du har gjort ändringar i Dev. Hur får du över dem till Test säkrast?", opts: ["Manuell uppladdning", "Deployment Pipeline", "Copy Paste", "Save As"], correct: 1, senior: "Deployment Pipelines hanterar metadata-flytt och parameter-regler (t.ex. byta connection string).", grandma: "Som ett löpande band i fabriken. En knapptryckning flyttar bilen från montering (Dev) till lackering (Test)." },
+            { id: 7, type: "core", cat: "Fabric Domains", icon: "🏷️", q: "Varför använda Domäner?", scenario: "En stor organisation har data för HR, Finans och Sälj i en enda röra.", opts: ["Bättre prestanda", "Logisk gruppering & Governance", "Krävs för Copilot", "Billigare"], correct: 1, senior: "Domäner tillåter decentraliserat ägarskap. HR kan vara admin för sina workspaces, Finans för sina.", grandma: "Istället för en stor låda med alla leksaker, har vi en låda för Lego (HR) och en för Bilar (Finans)." },
+            { id: 8, type: "core", cat: "Capacity Metrics", icon: "📊", q: "Hitta 'Noisy Neighbor'?", scenario: "Hela kapaciteten är långsam. En specifik rapport drar 90% CPU.", opts: ["Task Manager", "Capacity Metrics App", "Power BI Admin", "Fråga användarna"], correct: 1, senior: "Metrics App visar exakt vilken 'Item' (Rapport/Notebook) som konsumerar CU över tid.", grandma: "Vem äter upp all tårta? Kolla övervakningskameran (Metrics App) för att hitta den skyldige." },
+            { id: 9, type: "core", cat: "Storage Modes", icon: "💾", q: "Dyr lagring?", scenario: "Du får slut på lagringsutrymme i din F64 kapacitet.", opts: ["Köp mer RAM", "Lagring är separat från Compute", "Radera rapporter", "Uppgradera till F128"], correct: 1, senior: "F-SKU betalar för Compute (CU). Lagring (OneLake) debiteras separat per GB (som ADLSg2).", grandma: "Hyran för lägenheten (Compute) är en sak. Kostnaden för möblerna du ställer in (Lagring) är en annan." },
+            { id: 10, type: "core", cat: "Workspaces", icon: "🏠", q: "Ta bort Workspace?", scenario: "Du raderar ett Workspace. Vad händer med datat i OneLake?", opts: ["Raderas direkt", "Soft Delete (Retention)", "Flyttas till Root", "Arkiveras för evigt"], correct: 1, senior: "Det hamnar i 'Soft Delete'. Kan återställas inom en viss tid (ofta 7-30 dagar beroende på config).", grandma: "Det hamnar i papperskorgen först. Du kan ångra dig innan sopbilen kommer." },
+            { id: 11, type: "core", cat: "DirectLake Fallback", icon: "🚧", q: "Varför Fallback?", scenario: "DirectLake stängs av. Du har lagt RLS i SQL Endpointen.", opts: ["Bug", "SQL RLS triggar Fallback", "Stöds ej", "Fel format"], correct: 1, senior: "Säkerhet (SQL RLS) blockerar direktläsning. Notera att även komplexa DAX-vyes kan trigga fallback.", grandma: "Lås på ytterdörren (SQL) tvingar vakten att öppna. Lås på glasögonen (Modellen) låter dig gå rakt in." },
+            { id: 12, type: "core", cat: "Medallion", icon: "🧹", q: "Var tvätta data?", scenario: "Rådata i Bronze. Behöver ta bort dubbletter.", opts: ["Bronze", "Silver", "Gold", "PBI"], correct: 1, senior: "Silver = Engineering (Clean, Type, Dedupe). Bronze = History. Gold = Aggregation.", grandma: "Bronze = Matkassar på bordet. Silver = Skala/Hacka. Gold = Serverad middag." },
+            { id: 13, type: "core", cat: "V-Order", icon: "📚", q: "Vad gör V-Order?", scenario: "Du aktiverar V-Order på alla tabeller. Vad är trade-offen?", opts: ["Långsammare skrivning", "Långsammare läsning", "Mer lagring", "Sämre säkerhet"], correct: 0, senior: "V-Order maximerar LÄS-hastighet (PBI) genom att sortera och komprimera hårt, men det gör SKRIV-operationer långsammare.", grandma: "Det tar längre tid att sortera bokhyllan perfekt (skriva), men det går supersnabbt att hitta boken sen (läsa)." },
+            { id: 14, type: "core", cat: "Copy vs Dataflow", icon: "🚚", q: "Flytta 10TB data?", scenario: "Ingen transformation, bara flytt.", opts: ["Dataflow", "Copy Activity", "Notebook", "Stored Proc"], correct: 1, senior: "Copy Activity är optimerad för binär throughput. Dataflows parsear rader (långsamt).", grandma: "Flytta bohaget? Använd lastbil (Copy), inte personbil (Dataflow)." },
+            { id: 15, type: "core", cat: "SQL Endpoint", icon: "👀", q: "Skriva med SQL?", scenario: "INSERT INTO i Lakehouse SQL Endpoint.", opts: ["Går bra", "Read-Only", "Kräver Admin", "Bara Views"], correct: 1, senior: "Lakehouse SQL Endpoint är Read-Only. Använd Warehouse för T-SQL DML.", grandma: "Skyltfönster (Lakehouse SQL) vs Verkstad (Warehouse)." },
+            { id: 16, type: "core", cat: "Spark Utils", icon: "🔧", q: "Lista filer i Notebook?", scenario: "Du vill se filer i en mapp med PySpark.", opts: ["ls -l", "mssparkutils.fs.ls", "os.listdir", "spark.list"], correct: 1, senior: "MSSparkUtils är det inbyggda biblioteket för filsystem-operationer i Fabric.", grandma: "Fabric har en egen schweizisk armékniv (MSSparkUtils) för filhantering." },
+            { id: 17, type: "core", cat: "Dataflows Gen2", icon: "🌊", q: "Spara till SQL DB?", scenario: "Du vill skriva resultatet av ett flöde till en Azure SQL DB.", opts: ["Går ej", "Data Destination", "Export to CSV", "Copy Activity"], correct: 1, senior: "Data Destination (tidigare Output Dest) låter dig skriva till Sinks som Lakehouse, Warehouse, SQL DB.", grandma: "Röret måste ha ett utlopp. Data Destination bestämmer var vattnet (datat) hamnar." },
+            { id: 18, type: "core", cat: "Notebook Scheduling", icon: "⏰", q: "Köra Notebook varje natt?", scenario: "Du har en PySpark-kod som måste köras 03:00.", opts: ["Windows Scheduler", "Pipeline Schedule", "Notebook Settings", "Manuellt"], correct: 1, senior: "Lägg Notebooken i en Pipeline. Sätt en Schedule Trigger på Pipelinen.", grandma: "Notebooken är en artist. Pipelinen är turnéledaren som säger när det är dags att gå på scen." },
+            { id: 19, type: "core", cat: "Delta Tables", icon: "⏳", q: "Ångra en radering?", scenario: "Du råkade radera data i en Delta-tabell. Hur får du tillbaka den?", opts: ["Backup restore", "Time Travel", "Går ej", "Ctrl+Z"], correct: 1, senior: "Delta behåller historik. Använd `TIMESTAMP AS OF` eller `VERSION AS OF` för att läsa gammal data.", grandma: "Delta-tabeller är som en tidsmaskin. Du kan alltid åka tillbaka till hur det såg ut igår." },
+            { id: 20, type: "core", cat: "Optimize", icon: "🧹", q: "Många små filer?", scenario: "Prestandan är dålig. Du har tusentals pyttesmå Parquet-filer.", opts: ["VACUUM", "OPTIMIZE", "DELETE", "MERGE"], correct: 1, senior: "OPTIMIZE 'bin-packs' små filer till större, effektiva filer. VACUUM tar bort gamla versioner.", grandma: "Städa rummet. Lägg alla små lego-bitar i en stor låda (Optimize) så hittar du lättare." },
 
-        // --- BOSS SCENARIOS 101-118 ---
-        {
-          id: 101,
-          type: "boss",
-          cat: "Spark Skew",
-          icon: "⚖️",
-          q: "Jobbet hänger på 99%?",
-          scenario:
-            "Spark-jobbet kör snabbt i början men sista tasken tar 4 timmar.",
-          opts: ["Öka minnet", "Data Skew", "Nätverksfel", "Uppdatera Spark"],
-          correct: 1,
-          senior:
-            "Data Skew innebär att en partition är mycket större än andra. Använd 'Salting' eller Adaptive Query Execution (AQE).",
-          grandma:
-            "En kassa i affären har 100 kunder i kö (Skew), de andra har ingen. Det spelar ingen roll hur snabb kassörskan är.",
-        },
-        {
-          id: 102,
-          type: "boss",
-          cat: "DirectLake Limitations",
-          icon: "⛔",
-          q: "Vyer i DirectLake?",
-          scenario:
-            "Du skapar en SQL View i Warehouset som joinar 3 tabeller. Power BI DirectLake är långsamt.",
-          opts: [
-            "Views stöds ej",
-            "Det är snabbt",
-            "Fallback till DQ",
-            "Måste vara Materialized",
-          ],
-          correct: 2,
-          senior:
-            "DirectLake kan inte läsa komplexa SQL-vyer direkt. Den måste göra Fallback till DirectQuery för att SQL-motorn ska processa vyn.",
-          grandma:
-            "Om du skriver instruktionerna på ett språk (SQL View) som läsaren (DirectLake) inte kan, måste de anlita en tolk (DirectQuery).",
-        },
+            // --- BOSS 101-118 ---
+            { id: 101, type: "boss", cat: "Spark Skew", icon: "⚖️", q: "Jobbet hänger på 99%?", scenario: "Spark-jobbet kör snabbt i början men sista tasken tar 4 timmar.", opts: ["Öka minnet", "Data Skew", "Nätverksfel", "Uppdatera Spark"], correct: 1, senior: "Data Skew innebär att en partition är mycket större än andra. Använd 'Salting' eller Adaptive Query Execution (AQE).", grandma: "En kassa i affären har 100 kunder i kö (Skew), de andra har ingen. Det spelar ingen roll hur snabb kassörskan är." },
+            { id: 102, type: "boss", cat: "DirectLake Limitations", icon: "⛔", q: "Vyer i DirectLake?", scenario: "Du skapar en SQL View i Warehouset som joinar 3 tabeller. Power BI DirectLake är långsamt.", opts: ["Views stöds ej", "Det är snabbt", "Fallback till DQ", "Måste vara Materialized"], correct: 2, senior: "DirectLake kan inte läsa komplexa SQL-vyer direkt. Den måste göra Fallback till DirectQuery för att SQL-motorn ska processa vyn.", grandma: "Om du skriver instruktionerna på ett språk (SQL View) som läsaren (DirectLake) inte kan, måste de anlita en tolk (DirectQuery)." },
+            { id: 103, type: "boss", cat: "Ordering vs Sorting", icon: "📚", q: "Sort inom Partition?", scenario: "Du vill optimera 'Predicate Pushdown' för datum-filter i Spark.", opts: ["ORDER BY", "SORT WITHIN PARTITIONS", "CLUSTER BY", "GROUP BY"], correct: 1, senior: "`SORT WITHIN PARTITIONS` sorterar datat inuti varje fil, vilket gör att Parquet footer-statistiken (Min/Max) blir effektivare för skipping.", grandma: "Sortera varje kapitel för sig. Då vet du direkt om datumet du söker finns i just det kapitlet." },
+            { id: 104, type: "boss", cat: "Variable Evaluation", icon: "📦", q: "DAX VAR fälla?", scenario: "VAR x = [Sales]. RETURN CALCULATE(x, ALL(Date)). Filtret tas inte bort.", opts: ["Bug i DAX", "Variabler är konstanter", "Fel syntax", "Använd EARLIER"], correct: 1, senior: "Variabler utvärderas NÄR DE DEFINIERAS, inte när de används. Kontexten är låst vid definitionstillfället.", grandma: "Om du tar ett foto av himlen (VAR) på natten, kommer det fotot alltid vara mörkt även om du tittar på det på dagen (RETURN)." },
+            { id: 105, type: "boss", cat: "Cross-Tenant", icon: "🌐", q: "Dela data externt?", scenario: "Dela en Power BI rapport med ett annat företag (B2B). RLS måste fungera.", opts: ["Går ej", "Bjud in som Guest", "Skicka PBIX", "Public to Web"], correct: 1, senior: "Externa användare (Entra ID Guest) kan se rapporter, och RLS fungerar om du mappar deras externa email (UPN) i säkerhetstabellen.", grandma: "Gästen får en besöksbricka. Dörrvakten (RLS) kollar brickan och ser att de bara får gå till konferensrummet." },
+            { id: 106, type: "boss", cat: "Shortcut Security", icon: "🛡️", q: "Vem bestämmer access?", scenario: "Du skapar en Shortcut till en ADLS Gen2-mapp. Får användarna tillgång?", opts: ["Ja, automatiskt", "Nej, ACL i ADLS styr", "Ja, via OneLake", "Bara Admin"], correct: 1, senior: "Shortcuts använder 'Delegated Access'. Slutanvändarens identitet (OAuth) passeras till ADLS. De måste ha ACL-rättigheter i källan.", grandma: "Genvägen är bara en karta. Om dörren till skattkammaren (ADLS) är låst, hjälper inte kartan." },
+            { id: 107, type: "boss", cat: "OLS vs RLS", icon: "🙈", q: "Gömma en kolumn?", scenario: "HR vill att 'Salary' kolumnen ska vara helt osynlig för icke-chefer, inte bara tom.", opts: ["RLS", "OLS (Object Level)", "Göm i rapport", "Bryt ut tabell"], correct: 1, senior: "OLS (Object Level Security) tar bort metadata. För användaren existerar inte kolumnen. OBS: Kan krascha rapporter som använder kolumnen.", grandma: "RLS stryker över texten med svart tusch. OLS river ut hela sidan ur boken." },
+            { id: 108, type: "boss", cat: "Pipeline Parameters", icon: "🎚️", q: "Parameter till Notebook?", scenario: "Skicka 'RunDate' från Data Pipeline till en Notebook-cell.", opts: ["Notebook.run(args)", "Widget", "Toggle parameter cell", "Global variable"], correct: 2, senior: "Markera cellen som 'Toggle parameter cell' i Notebooken. Pipelinen injicerar variabler som överskriver standardvärdena.", grandma: "Notebooken har en inköpslista. Pipelinen kan smyga ner en extra lapp i fickan innan du går in i affären." },
+            { id: 109, type: "boss", cat: "Concurrency Control", icon: "🚦", q: "Max samtidiga körningar?", scenario: "Din pipeline triggas av 1000 filer samtidigt. API:et kraschar.", opts: ["Öka Timeout", "Concurrency Limit", "Retry Policy", "Batching"], correct: 1, senior: "Sätt 'Concurrency' i ForEach-loopen till t.ex. 10. Det köar upp körningarna istället för att bomba källsystemet.", grandma: "Släpp bara in 10 personer åt gången på nattklubben, annars blir det kaos i baren." },
+            { id: 110, type: "boss", cat: "Self-Hosted Gateway", icon: "🚪", q: "VNET Data?", scenario: "Fabric ska läsa data från en SQL Server bakom en brandvägg (On-prem).", opts: ["VPN", "On-Prem Gateway", "Trusted IP", "ExpressRoute"], correct: 1, senior: "Data Gateway krävs för att 'tunnla' in trafik från Fabric (molnet) till ett skyddat nätverk.", grandma: "En säker lucka i muren. Du kan inte gå in, men Gatewayen kan skicka ut paket till dig." },
+            { id: 111, type: "boss", cat: "JSON Handling", icon: "📜", q: "Parse JSON i T-SQL?", scenario: "Du har en kolumn med JSON-text i Warehouset. Du vill extrahera ett värde.", opts: ["SUBSTRING", "JSON_VALUE", "OPENXML", "Regex"], correct: 1, senior: "`JSON_VALUE(col, '$.property')` är det optimerade sättet att extrahera skalära värden ur JSON i Fabric DW.", grandma: "Använd en pincett (JSON_VALUE) för att plocka ut russinet ur kakan, smula inte sönder hela kakan." },
+            { id: 112, type: "boss", cat: "Statistics", icon: "📊", q: "Gammal statistik?", scenario: "Queryn var snabb igår, långsam idag. Datan har ändrats mycket.", opts: ["Rebuild Index", "Update Statistics", "Clear Cache", "Starta om"], correct: 1, senior: "SQL-optimizern behöver uppdaterad statistik för att välja rätt plan. I Fabric sker detta oftast auto, men kan kräva manuell `UPDATE STATISTICS`.", grandma: "GPS:en tror att vägen är tom (gammal stats), men det är kö. Uppdatera kartan så väljer den en annan väg." },
+            { id: 113, type: "boss", cat: "Transaction Log", icon: "📝", q: "Full Log?", scenario: "En massiv DELETE operation fyller transaktionsloggen och felar.", opts: ["Köp mer disk", "Kör i batcher", "Stäng av loggning", "Switch recovery model"], correct: 1, senior: "Fabric Warehouse hanterar loggar auto, men massiva transaktioner kan slå i taket. Dela upp i mindre batcher (WHILE loop).", grandma: "Ät inte hela elefanten i en tugga. Dela upp det så sätter du inte i halsen." },
+            { id: 114, type: "boss", cat: "Pandas to Spark", icon: "🐼", q: "Pandas skalning?", scenario: "Du konverterar en Spark DF till Pandas DF för bearbetning. Det kraschar (OOM).", opts: ["Öka Driver Memory", "Använd Spark Native", "Koalas", "Chunking"], correct: 1, senior: "`toPandas()` drar all data till Driver-noden (Single node). Pandas skalar inte. Använd PySpark functions eller Pandas-on-Spark API.", grandma: "Försök inte hälla hela badkaret (Spark) ner i en liten hink (Pandas). Det rinner över." },
+            { id: 115, type: "boss", cat: "Slow Write", icon: "🐢", q: "Många små partitions?", scenario: "Du skriver data partitionerat på 'Timestamp' (ms). Det tar evigheter.", opts: ["Bra för läsning", "Too many small files", "Ökar parallellitet", "Ingen påverkan"], correct: 1, senior: "Över-partitionering skapar miljoner små filer. Metadata-hanteringen dödar prestandan. Partitionera på 'Day' eller 'Month'.", grandma: "Lägg inte varje risgryn i en egen liten påse. Lägg dem i säckar." },
+            { id: 116, type: "boss", cat: "Dependency Hell", icon: "🕸️", q: "Bibliotekskonflikt?", scenario: "Ditt jobb kräver 'numpy 1.2'. Fabric default är '1.5'. Koden kraschar.", opts: ["Avinstallera i koden", "Custom Environment", "Ignorera", "Skriv om koden"], correct: 1, senior: "Skapa en 'Custom Environment', lås versionerna i en requirements.txt, och tilldela miljön till Workspacet.", grandma: "Om receptet kräver gammaldags mjölk, bygg ett eget skafferi (Environment) med rätt ingredienser." },
+            { id: 117, type: "boss", cat: "Throttling", icon: "⏳", q: "HTTP 429 Error?", scenario: "Dina API-anrop från en Pipeline misslyckas med kod 429.", opts: ["Serverfel", "Too Many Requests", "Not Found", "Unauthorized"], correct: 1, senior: "Mottagarsystemet stryper dig. Implementera 'Exponential Backoff' (vänta längre och längre mellan försöken).", grandma: "Om dörren är stängd, banka inte oavbrutet. Vänta en stund, sen knacka igen." },
+            { id: 118, type: "boss", cat: "OneLake Explorer", icon: "📂", q: "Filen syns inte?", scenario: "Du laddade upp en fil via Explorer, men den syns inte i Spark direkt.", opts: ["Sync Delay", "Rättigheter", "Fel mapp", "Starta om"], correct: 0, senior: "OneLake Explorer är en klient. Det kan vara några sekunders fördröjning innan metadata synkas till Spark-klustret.", grandma: "Brevet är lagt i lådan, men postbilen har inte hämtat det än." },
 
-        // --- CODE QUESTIONS 201-210 ---
-        {
-          id: 201,
-          type: "code",
-          cat: "SQL Security",
-          icon: "🔒",
-          q: "Dynamisk Maskering?",
-          scenario:
-            "Du måste dölja allt utom de sista 4 siffrorna i 'PhoneNumber'.<br>Målformat: <code>XXX-XXX-1234</code>.",
-          opts: [
-            "FUNCTION = 'partial(\"XXX-XXX-\", 0, 4)'",
-            "FUNCTION = 'partial(0, \"XXX-XXX-\", 4, NULL)'",
-            "FUNCTION = 'partial(0, 4, \"XXX-XXX-\")'",
-            "FUNCTION = 'partial(0, \"XXX-XXX-\", 4)'",
-          ],
-          correct: 3,
-          senior:
-            "T-SQL syntaxen är <code>partial(prefix_count, padding_string, suffix_count)</code>. Vi vill visa 0 tecken i början, lägga till 'XXX-XXX-', och visa 4 i slutet.",
-          grandma:
-            "Klipp bort början (0), klistra in en lapp (XXX), och spara svansen (4).",
-        },
-        {
-          id: 202,
-          type: "code",
-          cat: "T-SQL Ingestion",
-          icon: "📥",
-          q: "COPY INTO Syntax?",
-          scenario:
-            "Vilket kommando importerar Parquet-filer från OneLake till Warehouse snabbast?",
-          opts: [
-            "INSERT INTO dbo.Table SELECT * FROM 'https://...'",
-            "COPY INTO dbo.Table FROM 'https://...' WITH (FILE_TYPE = 'PARQUET')",
-            "BULK INSERT dbo.Table FROM 'https://...'",
-            "LOAD DATA INFILE 'https://...'",
-          ],
-          correct: 1,
-          senior:
-            "COPY INTO är det moderna, högpresterande kommandot för Fabric Warehouse. BULK INSERT är legacy SQL Server.",
-          grandma:
-            "Använd rätt verktyg. COPY INTO är en dammsugare för data, INSERT är en pincett.",
-        },
-        {
-          id: 203,
-          type: "code",
-          cat: "PySpark Save",
-          icon: "💾",
-          q: "Spara som Delta?",
-          scenario:
-            "Du har en DataFrame <code>df</code>. Hur sparar du den som en hanterad tabell i Lakehouse?",
-          opts: [
-            "df.write.format('delta').save('/Tables/MyTable')",
-            "df.write.saveAsTable('MyTable')",
-            "df.save.table('MyTable')",
-            "INSERT INTO MyTable VALUES (df)",
-          ],
-          correct: 1,
-          senior:
-            "<code>saveAsTable('Namn')</code> registrerar tabellen i metastoren och hanterar sökvägen automatiskt. <code>save()</code> sparar bara filer.",
-          grandma:
-            "Att 'spara som tabell' är som att sätta in boken i bibliotekssystemet. Att bara 'spara' är att lägga boken på en hylla utan att berätta för någon.",
-        },
-        {
-          id: 204,
-          type: "code",
-          cat: "JSON Handling",
-          icon: "📜",
-          q: "Extrahera JSON?",
-          scenario:
-            "Du har JSON i kolumnen <code>Attributes</code>: <code>{'color': 'red'}</code>. Hur hämtar du 'red' i T-SQL?",
-          opts: [
-            "SELECT Attributes->'color'",
-            "SELECT JSON_VALUE(Attributes, '$.color')",
-            "SELECT JSON_QUERY(Attributes, '$.color')",
-            "SELECT GET_JSON(Attributes, 'color')",
-          ],
-          correct: 1,
-          senior:
-            "<code>JSON_VALUE</code> extraherar ett skalärt värde (text/nummer). <code>JSON_QUERY</code> extraherar ett objekt/array (mer JSON).",
-          grandma:
-            "JSON_VALUE plockar ut godiset ur papperet. JSON_QUERY ger dig hela påsen.",
-        },
-        {
-          id: 205,
-          type: "code",
-          cat: "Semantic Link",
-          icon: "🔗",
-          q: "Läsa PBI i Python?",
-          scenario:
-            "Du vill läsa tabellen 'Sales' från ditt dataset 'MyDataset' med SemPy.",
-          opts: [
-            "fabric.read_table('MyDataset', 'Sales')",
-            "pd.read_pbi('MyDataset', 'Sales')",
-            "spark.read.dataset('MyDataset').table('Sales')",
-            "sempy.fabric.read_table('MyDataset', 'Sales')",
-          ],
-          correct: 3,
-          senior:
-            "Biblioteket heter <code>sempy</code>. Syntaxen är <code>sempy.fabric.read_table(dataset, table)</code>. Detta är unikt för Fabric.",
-          grandma:
-            "Du måste använda rätt nyckel (sempy) för att öppna dörren mellan Python och Power BI.",
-        },
-        {
-          id: 206,
-          type: "code",
-          cat: "SQL Security",
-          icon: "📧",
-          q: "Maskera E-post?",
-          scenario:
-            "Du vill maskera kolumnen 'Email' så att endast första bokstaven syns (t.ex. aXXX@XXXX.com). Vilken funktion?",
-          opts: [
-            "MASKED WITH (FUNCTION = 'email()')",
-            "MASKED WITH (FUNCTION = 'partial(1, \"XXX@XXXX.com\", 0)')",
-            "MASKED WITH (FUNCTION = 'default()')",
-            "MASKED WITH (FUNCTION = 'hide_email()')",
-          ],
-          correct: 0,
-          senior:
-            "T-SQL har en inbyggd <code>email()</code> funktion för DDM som automatiskt ger formatet 'aXXX@XXXX.com'. Du behöver inte bygga den manuellt.",
-          grandma:
-            "Använd den färdiga stämpeln för e-post, rita inte över varje brev för hand.",
-        },
-        {
-          id: 207,
-          type: "code",
-          cat: "SQL Security",
-          icon: "🎲",
-          q: "Slumpmässig Lön?",
-          scenario:
-            "Du vill visa ett slumpmässigt värde mellan 10000 och 50000 för kolumnen 'Salary' för obehöriga.",
-          opts: [
-            "MASKED WITH (FUNCTION = 'random(10000, 50000)')",
-            "MASKED WITH (FUNCTION = 'rand(10000, 50000)')",
-            "MASKED WITH (FUNCTION = 'default()')",
-            "MASKED WITH (FUNCTION = 'partial(0, 0, 0)')",
-          ],
-          correct: 0,
-          senior:
-            "Funktionen <code>random(min, max)</code> ersätter det riktiga värdet med ett slumpmässigt tal inom intervallet vid läsning.",
-          grandma:
-            "Sätt en prislapp med ett hittepå-pris så ingen vet vad det egentligen kostar.",
-        },
-        {
-          id: 208,
-          type: "code",
-          cat: "SQL Permissions",
-          icon: "👁️",
-          q: "Se maskerad data?",
-          scenario:
-            "Användaren 'Lily' behöver se de riktiga värdena i en maskerad tabell. Vilket kommando?",
-          opts: [
-            "GRANT SELECT TO Lily",
-            "GRANT ADMIN TO Lily",
-            "GRANT UNMASK TO Lily",
-            "ALTER USER Lily SET MASKING = OFF",
-          ],
-          correct: 2,
-          senior:
-            "Behörigheten <code>UNMASK</code> är den specifika nyckeln som låter en användare se genom maskeringen. <code>SELECT</code> räcker inte.",
-          grandma:
-            "Ge Lily röntgen-glasögonen (UNMASK) så hon kan se genom den suddiga texten.",
-        },
-        {
-          id: 209,
-          type: "code",
-          cat: "SQL Security",
-          icon: "🚫",
-          q: "Column Level Security?",
-          scenario:
-            "Du vill helt hindra användare från att ens se att kolumnen 'SSN' existerar (inte bara maskera den).",
-          opts: [
-            "Använd Dynamic Data Masking (default)",
-            "GRANT SELECT ON Table(Col1, Col2) TO User",
-            "CREATE VIEW utan SSN och ge access till Vyn",
-            "Både B och C fungerar",
-          ],
-          correct: 3,
-          senior:
-            "CLS (Column Level Security) implementeras ofta genom att ge <code>GRANT SELECT</code> på specifika kolumner eller genom Vyer. DDM döljer bara värdet, inte kolumnen.",
-          grandma:
-            "Maskering suddar ut texten. CLS klipper bort hela kolumnen från pappret.",
-        },
-        {
-          id: 210,
-          type: "code",
-          cat: "Row Level Security",
-          icon: "🕵️",
-          q: "RLS Predicate?",
-          scenario:
-            "Du skapar en säkerhetspolicy. Vilken funktion filtrerar rader baserat på vem som frågar?",
-          opts: [
-            "USER_NAME() = Region",
-            "SUSER_SNAME()",
-            "SESSION_USER",
-            "Alla ovan kan användas beroende på kontext",
-          ],
-          correct: 3,
-          senior:
-            "I T-SQL för Fabric Warehouse används ofta systemfunktioner som <code>USER_NAME()</code>, <code>SUSER_SNAME()</code> eller <code>SESSION_USER</code> i predikat-funktionen för att matcha mot data.",
-          grandma:
-            "Vakten kollar ID-kortet (System Function) och jämför namnet med gästlistan.",
-        },
-      ];
+            // --- CODE 201-210 ---
+            { id: 201, type: "code", cat: "SQL Security", icon: "🔒", q: "Dynamisk Maskering?", scenario: "Du måste dölja allt utom de sista 4 siffrorna i 'PhoneNumber'.<br>Målformat: <code>XXX-XXX-1234</code>.", opts: ["FUNCTION = 'partial(\"XXX-XXX-\", 0, 4)'", "FUNCTION = 'partial(0, \"XXX-XXX-\", 4, NULL)'", "FUNCTION = 'partial(0, 4, \"XXX-XXX-\")'", "FUNCTION = 'partial(0, \"XXX-XXX-\", 4)'"], correct: 3, senior: "T-SQL syntaxen är <code>partial(prefix_count, padding_string, suffix_count)</code>. Vi vill visa 0 tecken i början, lägga till 'XXX-XXX-', och visa 4 i slutet.", grandma: "Klipp bort början (0), klistra in en lapp (XXX), och spara svansen (4)." },
+            { id: 202, type: "code", cat: "T-SQL Ingestion", icon: "📥", q: "COPY INTO Syntax?", scenario: "Vilket kommando importerar Parquet-filer från OneLake till Warehouse snabbast?", opts: ["INSERT INTO dbo.Table SELECT * FROM 'https://...'", "COPY INTO dbo.Table FROM 'https://...' WITH (FILE_TYPE = 'PARQUET')", "BULK INSERT dbo.Table FROM 'https://...'", "LOAD DATA INFILE 'https://...'"], correct: 1, senior: "COPY INTO är det moderna, högpresterande kommandot för Fabric Warehouse. BULK INSERT är legacy SQL Server.", grandma: "Använd rätt verktyg. COPY INTO är en dammsugare för data, INSERT är en pincett." },
+            { id: 203, type: "code", cat: "PySpark Save", icon: "💾", q: "Spara som Delta?", scenario: "Du har en DataFrame <code>df</code>. Hur sparar du den som en hanterad tabell i Lakehouse?", opts: ["df.write.format('delta').save('/Tables/MyTable')", "df.write.saveAsTable('MyTable')", "df.save.table('MyTable')", "INSERT INTO MyTable VALUES (df)"], correct: 1, senior: "<code>saveAsTable('Namn')</code> registrerar tabellen i metastoren och hanterar sökvägen automatiskt. <code>save()</code> sparar bara filer.", grandma: "Att 'spara som tabell' är som att sätta in boken i bibliotekssystemet. Att bara 'spara' är att lägga boken på en hylla utan att berätta för någon." },
+            { id: 204, type: "code", cat: "JSON Handling", icon: "📜", q: "Extrahera JSON?", scenario: "Du har JSON i kolumnen <code>Attributes</code>: <code>{'color': 'red'}</code>. Hur hämtar du 'red' i T-SQL?", opts: ["SELECT Attributes->'color'", "SELECT JSON_VALUE(Attributes, '$.color')", "SELECT JSON_QUERY(Attributes, '$.color')", "SELECT GET_JSON(Attributes, 'color')"], correct: 1, senior: "<code>JSON_VALUE</code> extraherar ett skalärt värde (text/nummer). <code>JSON_QUERY</code> extraherar ett objekt/array (mer JSON).", grandma: "JSON_VALUE plockar ut godiset ur papperet. JSON_QUERY ger dig hela påsen." },
+            { id: 205, type: "code", cat: "Semantic Link", icon: "🔗", q: "Läsa PBI i Python?", scenario: "Du vill läsa tabellen 'Sales' från ditt dataset 'MyDataset' med SemPy.", opts: ["fabric.read_table('MyDataset', 'Sales')", "pd.read_pbi('MyDataset', 'Sales')", "spark.read.dataset('MyDataset').table('Sales')", "sempy.fabric.read_table('MyDataset', 'Sales')"], correct: 3, senior: "Biblioteket heter <code>sempy</code>. Syntaxen är <code>sempy.fabric.read_table(dataset, table)</code>. Detta är unikt för Fabric.", grandma: "Du måste använda rätt nyckel (sempy) för att öppna dörren mellan Python och Power BI." },
+            { id: 206, type: "code", cat: "SQL Security", icon: "📧", q: "Maskera E-post?", scenario: "Du vill maskera kolumnen 'Email' så att endast första bokstaven syns (t.ex. aXXX@XXXX.com). Vilken funktion?", opts: ["MASKED WITH (FUNCTION = 'email()')", "MASKED WITH (FUNCTION = 'partial(1, \"XXX@XXXX.com\", 0)')", "MASKED WITH (FUNCTION = 'default()')", "MASKED WITH (FUNCTION = 'hide_email()')"], correct: 0, senior: "T-SQL har en inbyggd <code>email()</code> funktion för DDM som automatiskt ger formatet 'aXXX@XXXX.com'. Du behöver inte bygga den manuellt.", grandma: "Använd den färdiga stämpeln för e-post, rita inte över varje brev för hand." },
+            { id: 207, type: "code", cat: "SQL Security", icon: "🎲", q: "Slumpmässig Lön?", scenario: "Du vill visa ett slumpmässigt värde mellan 10000 och 50000 för kolumnen 'Salary' för obehöriga.", opts: ["MASKED WITH (FUNCTION = 'random(10000, 50000)')", "MASKED WITH (FUNCTION = 'rand(10000, 50000)')", "MASKED WITH (FUNCTION = 'default()')", "MASKED WITH (FUNCTION = 'partial(0, 0, 0)')"], correct: 0, senior: "Funktionen <code>random(min, max)</code> ersätter det riktiga värdet med ett slumpmässigt tal inom intervallet vid läsning.", grandma: "Sätt en prislapp med ett hittepå-pris så ingen vet vad det egentligen kostar." },
+            { id: 208, type: "code", cat: "SQL Permissions", icon: "👁️", q: "Se maskerad data?", scenario: "Användaren 'Lily' behöver se de riktiga värdena i en maskerad tabell. Vilket kommando?", opts: ["GRANT SELECT TO Lily", "GRANT ADMIN TO Lily", "GRANT UNMASK TO Lily", "ALTER USER Lily SET MASKING = OFF"], correct: 2, senior: "Behörigheten <code>UNMASK</code> är den specifika nyckeln som låter en användare se genom maskeringen. <code>SELECT</code> räcker inte.", grandma: "Ge Lily röntgen-glasögonen (UNMASK) så hon kan se genom den suddiga texten." },
+            { id: 209, type: "code", cat: "SQL Security", icon: "🚫", q: "Column Level Security?", scenario: "Du vill helt hindra användare från att ens se att kolumnen 'SSN' existerar (inte bara maskera den).", opts: ["Använd Dynamic Data Masking (default)", "GRANT SELECT ON Table(Col1, Col2) TO User", "CREATE VIEW utan SSN och ge access till Vyn", "Både B och C fungerar"], correct: 3, senior: "CLS (Column Level Security) implementeras ofta genom att ge <code>GRANT SELECT</code> på specifika kolumner eller genom Vyer. DDM döljer bara värdet, inte kolumnen.", grandma: "Maskering suddar ut texten. CLS klipper bort hela kolumnen från pappret." },
+            { id: 210, type: "code", cat: "Row Level Security", icon: "🕵️", q: "RLS Predicate?", scenario: "Du skapar en säkerhetspolicy. Vilken funktion filtrerar rader baserat på vem som frågar?", opts: ["USER_NAME() = Region", "SUSER_SNAME()", "SESSION_USER", "Alla ovan kan användas beroende på kontext"], correct: 3, senior: "I T-SQL för Fabric Warehouse används ofta systemfunktioner som <code>USER_NAME()</code>, <code>SUSER_SNAME()</code> eller <code>SESSION_USER</code> i predikat-funktionen för att matcha mot data.", grandma: "Vakten kollar ID-kortet (System Function) och jämför namnet med gästlistan." },
+            
+            // --- PRAGMATIC WORKS 301-305 ---
+            { id: 301, type: "boss", cat: "Licensing", icon: "💳", q: "Gratis Consumers?", scenario: "Du har 350 användare som bara ska läsa rapporter (inga licenser). Vilken F-SKU är minimum?", opts: ["F32", "F64", "F128", "PPU"], correct: 1, senior: "F64 är den magiska gränsen. Det motsvarar P1. Allt under F64 kräver att VARJE läsare har en Pro-licens.", grandma: "Om du hyr den stora bussen (F64) får passagerarna åka gratis. I den lilla bilen (F32) måste alla köpa biljett." },
+            { id: 302, type: "core", cat: "Scaling", icon: "📈", q: "Var skalar du upp?", scenario: "Prestandan är dålig. Du behöver dubbla din Fabric Capacity. Var klickar du?", opts: ["Fabric Admin Portal", "Workspace Settings", "Azure Portal", "Power BI Settings"], correct: 2, senior: "Kapaciteten är en Azure-resurs. Du skapar, pausar och skalar den i Azure Portal, inte inne i Fabric.", grandma: "Du ringer hyresvärden (Azure) för att bygga ut huset, du gör det inte genom att möblera om i vardagsrummet (Fabric)." },
+            { id: 303, type: "boss", cat: "Dataverse", icon: "🔗", q: "Dataverse Shortcut syns ej?", scenario: "Du försöker skapa en shortcut till Dataverse men tabellerna dyker inte upp.", opts: ["Byt region", "Aktivera 'Link to Fabric' i Power Apps", "Skapa en Pipeline", "Behörighetsfel"], correct: 1, senior: "För Dataverse måste du specifikt aktivera 'Link to Fabric' inne i Power Apps Maker Portal först för att synka metadatan till OneLake.", grandma: "Du måste öppna dörren inifrån huset (Power Apps) innan du kan gå in utifrån." },
+            { id: 304, type: "core", cat: "Dataflow Gen2", icon: "🏗️", q: "Schema för Relationer?", scenario: "Du bygger en Dimension-tabell i Dataflow Gen2 som ska ha relationer. Vilket schema?", opts: ["Dynamic Schema", "Fixed Schema", "Star Schema", "Snowflake Schema"], correct: 1, senior: "Välj 'Fixed Schema'. Dynamic Schema kan ändra kolumntyper vid nästa körning, vilket kraschar relationer i modellen.", grandma: "Gjut grunden i betong (Fixed) om du ska bygga hus på den. Om grunden rör sig (Dynamic) rasar huset." },
+            { id: 305, type: "boss", cat: "Dataflow Performance", icon: "🚀", q: "Staging för små data?", scenario: "Du laddar 1000 rader dagligen via Dataflow Gen2. Det går långsamt.", opts: ["Enable Staging", "Disable Staging", "Använd Gateway", "Öka Compute"], correct: 1, senior: "För små volymer, välj 'Disable Staging'. Staging skriver till SQL/Lakehouse först (overhead). Direkt-skrivning är snabbare för små mängder.", grandma: "Om du bara har ett brev, gå direkt till brevlådan. Mellanlanda inte på postterminalen (Staging)." }
+            // --- REAL-TIME & KQL (ATLAS BATCH 401-415) ---
+            { id: 401, type: "core", cat: "Eventhouse", icon: "⚡", q: "Hot vs Cold Cache?", scenario: "Du behöver extremt snabba svar på data från de senaste 24 timmarna. Data äldre än så används sällan.", opts: ["Caching Policy", "Retention Policy", "Update Policy", "Sharding Policy"], correct: 0, senior: "Caching Policy styr vad som ligger på lokal SSD (Hot) vs Blob Storage (Cold). Sätt Hot Cache till 1 dag för maximal prestanda.", grandma: "Lägg dagens tidning på köksbordet (Hot) så du når den direkt. Lägg gårdagens i pappersinsamlingen i garaget (Cold)." },
+            { id: 402, type: "code", cat: "KQL Syntax", icon: "⌨️", q: "Filtrera tid?", scenario: "Du vill se händelser från de senaste 30 minuterna i tabellen 'Logs'.", opts: ["Logs | where Timestamp > ago(30m)", "Logs | filter Timestamp > now() - 30m", "SELECT * FROM Logs WHERE Timestamp > DATEADD(m, -30, GETDATE())", "Logs | take 30m"], correct: 0, senior: "`ago()` är den mest optimerade funktionen i Kusto för tidsfiltrering. SQL-syntax fungerar inte native i KQL-frågor.", grandma: "Att säga 'för 30 minuter sedan' är enklare än att räkna ut exakt klockslag och subtrahera." },
+            { id: 403, type: "boss", cat: "Eventstream", icon: "🌊", q: "Destinations?", scenario: "Du sätter upp en Eventstream. Du vill spara rådata i Lakehouse OCH aggregerad data i KQL Database.", opts: ["Kräver två streams", "Multicast (flera destinationer)", "Går ej, välj en", "Använd Data Pipeline"], correct: 1, senior: "Fabric Eventstreams stöder flera samtidiga destinationer. Du kan grena strömmen: en 'rå' till Lakehouse (Delta) och en 'processad' till Eventhouse.", grandma: "Du kan koppla både en vattenslang (Lakehouse) och en sprinkler (KQL) till samma kran." },
+            { id: 404, type: "core", cat: "Materialized Views", icon: "🏗️", q: "Varför Materialized View?", scenario: "Du har miljoner IoT-signaler per sekund men behöver bara veta 'Max temperatur per timme' i din rapport.", opts: ["Snabbare Ingestion", "Deduplicering & Aggregering vid skrivning", "Sparar diskutrymme", "Krävs för Power BI"], correct: 1, senior: "Materialized Views i KQL beräknar aggregeringen (Max, Count, Sum) vid ingestion-tillfället. Queryn läser sen mot det färdiga resultatet, vilket ger millisekund-svar.", grandma: "Istället för att räkna alla mynt i spargrisen varje gång du vill veta summan, skriver du upp summan på en lapp varje gång du lägger i ett mynt." },
+            { id: 405, type: "boss", cat: "Update Policy", icon: "🔄", q: "ETL i Real-tid?", scenario: "När data landar i 'RawTable' vill du automatiskt transformera och flytta den till 'CleanTable'.", opts: ["Dataflow Gen2", "Notebook Trigger", "Update Policy", "Stored Procedure"], correct: 2, senior: "Update Policy är en funktion som triggas automatiskt när data appendas till källtabellen. Det är Kustos sätt att göra ELT med noll latens.", grandma: "En automatisk sorteringsmaskin. Så fort brevet landar i lådan (Raw), öppnas det och sorteras in i rätt fack (Clean)." },
+            { id: 406, type: "code", cat: "KQL Operators", icon: "➕", q: "Skapa ny kolumn?", scenario: "Du vill beräkna 'Total = Pris * Antal' i din queryresultat.", opts: ["project Total = Pris * Antal", "extend Total = Pris * Antal", "create column Total", "select Pris * Antal as Total"], correct: 1, senior: "`extend` lägger till en kolumn till de existerande. `project` väljer ut specifika kolumner och kastar bort resten.", grandma: "Extend sätter en post-it lapp på dokumentet. Project klipper ut texten och kastar resten av pappret." },
+            { id: 407, type: "boss", cat: "Eventhouse Capacity", icon: "🔋", q: "Auto-Scale?", scenario: "Din KQL Database får en spik av trafik kl 18.00. Vad händer?", opts: ["Den kraschar", "Auto-scale är på som default", "Manuell skalning krävs", "Throttling sker direkt"], correct: 1, senior: "Eventhouse i Fabric har inbyggd auto-scale. Den allokerar fler compute-enheter vid behov och skalar ner när det lugnar sig, utan att du lyfter ett finger.", grandma: "Buffén öppnar fler kassor när kön växer och stänger dem när det blir tomt." },
+            { id: 408, type: "core", cat: "Reflex (Activator)", icon: "🔔", q: "Trigga en Teams-alert?", scenario: "Om temperaturen > 100 grader i Eventstreamen, skicka ett meddelande till tekniker.", opts: ["Power Automate", "Data Activator (Reflex)", "Logic Apps", "Notification Hub"], correct: 1, senior: "Data Activator är designad för att 'lyssna' på data i realtid och agera (skicka mail, Teams, starta Fabric items) när villkor möts.", grandma: "En vakthund. Om den ser en inbrottstjuv (>100 grader) skäller den (Teams)." },
+            { id: 409, type: "code", cat: "KQL Join", icon: "🔗", q: "Join Prestanda?", scenario: "Du ska joina en enorm tabell 'Fact' (10B rader) med en liten tabell 'Dim' (100 rader).", opts: ["Fact | join kind=inner (Dim)", "Dim | join kind=inner (Fact)", "Fact | lookup Dim", "Spelar ingen roll"], correct: 2, senior: "Använd `lookup` när högra tabellen är liten (dimension). Det är optimerat för broadcast join. Om du använder `join`, ha alltid den minsta tabellen till VÄNSTER (eller använd hint.strategy=broadcast).", grandma: "Det är lättare att hålla den lilla inköpslistan i handen (Dim) och leta i den stora butiken (Fact), än tvärtom." },
+            { id: 410, type: "boss", cat: "Series Analysis", icon: "📈", q: "Hitta anomalier?", scenario: "Du vill upptäcka avvikelser i webbtrafik över tid med KQL.", opts: ["Bygg en ML-modell i Python", "series_decompose_anomalies()", "Gör en Average Group By", "Exportera till Excel"], correct: 1, senior: "KQL har inbyggda ML-funktioner för tidsserier. `series_decompose_anomalies` kan hitta spikar och dalar direkt i queryn.", grandma: "KQL har ett inbyggt mikroskop som ser bakterier (avvikelser) som det blotta ögat missar." },
+            { id: 411, type: "core", cat: "OneLake Availability", icon: "📂", q: "KQL data i OneLake?", scenario: "Du har sparat data i en KQL Database. Kan Spark läsa den?", opts: ["Nej, den är låst", "Ja, om du aktiverar OneLake Availability", "Bara via API", "Endast med Shortcut"], correct: 1, senior: "Aktivera 'OneLake Availability' på KQL-tabellen så sparas datat i Delta Parquet-format, vilket gör det direkt läsbart för Spark och SQL Engines.", grandma: "Om du skriver dagboken på esperanto (KQL Native) kan ingen läsa. Om du skriver på engelska (Delta Parquet) kan alla förstå." },
+            { id: 412, type: "code", cat: "KQL Aggregation", icon: "∑", q: "Binning av tid?", scenario: "Du vill rita en graf som visar antal events per 5 minuter.", opts: ["summarize count() by Timestamp", "summarize count() by bin(Timestamp, 5m)", "group by Timestamp step 5m", "project Timestamp, count()"], correct: 1, senior: "`bin(kolumn, storlek)` avrundar tiden till närmaste intervall. Nödvändigt för alla tidsserie-grafer.", grandma: "Istället för att räkna varje droppe regn (exakt tid), ställer vi ut hinkar och mäter hur mycket som kommit var 5:e minut." },
+            { id: 413, type: "boss", cat: "Retention Limit", icon: "🗑️", q: "Hur länge sparas data?", scenario: "Du sätter Retention Policy till 365 dagar. Vad händer dag 366?", opts: ["Data arkiveras", "Data raderas (Hard Delete)", "Data flyttas till Cold Cache", "Du betalar extra"], correct: 1, senior: "När retention-tiden går ut raderas datat permanent från Eventhouse. Behöver du spara längre måste du exportera det eller ändra policyn.", grandma: "När bäst-före-datumet går ut slänger butiken mjölken. Den sparas inte på lagret." },
+            { id: 414, type: "core", cat: "RTO/RPO", icon: "⏱️", q: "Disaster Recovery?", scenario: "En hel Azure-region går ner. Hur skyddar du ditt Eventhouse?", opts: ["Backup/Restore", "Leader-Follower Architecture", "Det sker automatiskt", "RAID-5"], correct: 1, senior: "För affärskritisk realtidsdata, sätt upp en 'Follower Database' i en annan region som speglar ledaren.", grandma: "Ha en kopia av husnyckeln hos grannen i nästa stad. Om ditt hus brinner upp har du fortfarande nyckeln." },
+            { id: 415, type: "boss", cat: "Partitioning", icon: "📦", q: "Data Sharding?", scenario: "Prestandan dyker på en tabell med 100 miljarder rader. Hur optimerar du lagringen?", opts: ["Partitioning Policy", "Sharding Policy", "Indexing Policy", "Compression"], correct: 0, senior: "KQL partitionerar automatiskt på tid (IngestionTime). Du kan lägga till en 'Hash Partition Key' (t.ex. TenantId) för att gruppera data fysiskt och snabba upp sökningar.", grandma: "Sortera biblioteket inte bara efter år (Tid), utan också efter genre (TenantId). Då hittar du 'Deckare från 1990' direkt." }
+            // --- ADVANCED SEMANTICS & DAX (ATLAS BATCH 501-515) ---
+            { id: 501, type: "core", cat: "Calculation Groups", icon: "🧮", q: "100 measures?", scenario: "Du har Sales, Cost, Margin. Du behöver YTD, QTD, MTD för alla tre. Ska du skapa 9 nya measures?", opts: ["Ja, det är best practice", "Nej, använd Calculation Groups", "Nej, använd Field Parameters", "Nej, använd Quick Measures"], correct: 1, senior: "Calculation Groups (via Tabular Editor eller native) tillåter dig att applicera logik (t.ex. `CALCULATE(SELECTEDMEASURE(), DATESYTD(...))`) dynamiskt på alla measures.", grandma: "Istället för att köpa en tidsmaskin till varje person (Measure), bygger vi en tidsmaskin (Calc Group) som vem som helst kan kliva in i." },
+            { id: 502, type: "boss", cat: "Composite Models", icon: "🧩", q: "DirectLake + Excel?", scenario: "Du har en DirectLake-modell. Du lägger till en lokal Excel-fil i modellen (Composite). Vad händer med prestandan?", opts: ["Ingen påverkan", "DirectLake blir Import", "DirectLake blir DirectQuery", "Excel blir DirectLake"], correct: 2, senior: "När du blandar DirectLake med andra källor (Composite Model) faller DirectLake tillbaka till DirectQuery-läge (trögare), eftersom motorn inte kan garantera minneskonsistens över olika 'öar' av data.", grandma: "Du blandar olja (DirectLake) och vatten (Excel). De blandas inte, så motorn måste köra långsamt och vispa hela tiden (DirectQuery)." },
+            { id: 503, type: "code", cat: "DAX Context", icon: "context", q: "SUMX vs SUM?", scenario: "Du vill räkna ut 'Pris * Antal' för varje rad och sen summera. Vilken funktion?", opts: ["SUM(Pris * Antal)", "SUMX(Table, Pris * Antal)", "CALCULATE(SUM(Pris) * SUM(Antal))", "AVERAGEX(Table, Pris * Antal)"], correct: 1, senior: "`SUM` accepterar bara en kolumn. `SUMX` är en iterator som går rad för rad, utför uttrycket, och sedan summerar. Nödvändigt för 'Line Item' beräkningar.", grandma: "SUM är att väga hela säcken potatis. SUMX är att ta upp varje potatis, tvätta den, väga den, och sen lägga ihop vikterna." },
+            { id: 504, type: "boss", cat: "Aggregations", icon: "⛰️", q: "Petabyte Dashboard?", scenario: "Du har 10 miljarder rader. Dashboarden måste ladda på <1 sek. DirectQuery är för långsamt.", opts: ["Bygg en Kub", "User-Defined Aggregations", "Import Mode", "Öka Capacity"], correct: 1, senior: "Skapa en aggregerad tabell (Import) som Power BI automatiskt träffar för 99% av frågorna. Detaljfrågor går vidare till DirectQuery (Detail Table).", grandma: "Ha en sammanfattning på första sidan (Agg). Läs bara hela boken (Detail) om någon frågar om en specifik fotnot." },
+            { id: 505, type: "code", cat: "DAX Variables", icon: "📦", q: "Varför använda VAR?", scenario: "<code>VAR x = [Sales] RETURN DIVIDE(x, [Budget])</code> vs att skriva [Sales] direkt.", opts: ["Bara för läsbarhet", "Prestanda & Debugging", "Ändrar scope", "Krävs för CALCULATE"], correct: 1, senior: "Variabler beräknas EN gång och lagras i minnet (Lazy Evaluation men cachad scope). Anropar du [Sales] två gånger utan VAR beräknas den två gånger.", grandma: "Räkna pengarna en gång och skriv upp summan (VAR). Räkna inte om sedlarna varje gång du ska köpa något." },
+            { id: 506, type: "boss", cat: "XMLA Endpoint", icon: "🔌", q: "Deploya bara en tabell?", scenario: "Du har en gigantisk modell (10GB). Du vill bara uppdatera en measure, inte ladda upp hela filen igen.", opts: ["Går ej", "ALM Toolkit / Tabular Editor", "Power BI Desktop", "Deployment Pipelines"], correct: 1, senior: "Via XMLA-endpointen (Read/Write) kan verktyg som ALM Toolkit göra en 'Schema Diff' och bara pusha ändringarna (metadata), vilket tar sekunder istället för minuter.", grandma: "Byt bara ut den trasiga glödlampan, bygg inte om hela huset." },
+            { id: 507, type: "core", cat: "Auto Date/Time", icon: "📅", q: "Modellen är enorm?", scenario: "Din modell är 500MB men har lite data. Du ser massor av dolda tabeller med namn som 'LocalDateTable...'.", opts: ["Virus", "Auto Date/Time", "Systemtabeller", "Tempfiler"], correct: 1, senior: "Stäng av 'Auto Date/Time'. Power BI skapar annars en dold datumtabell för VARJE datumkolumn, vilket bloatar minnet enormt. Använd en central Date Table.", grandma: "Power BI har smyg-kopierat kalendern för varje födelsedag du skrivit upp. Kasta dem och använd en väggkalender för allt." },
+            { id: 508, type: "code", cat: "USERELATIONSHIP", icon: "💞", q: "Order vs Ship Date?", scenario: "Du har en datumtabell kopplad till 'OrderDate'. Du vill visa 'ShipDate' i samma graf utan att ändra relationen.", opts: ["Kopiera datumtabellen", "USERELATIONSHIP", "CROSSFILTER", "LOOKUPVALUE"], correct: 1, senior: "`CALCULATE([Sales], USERELATIONSHIP(Fact[ShipDate], Date[Date]))` aktiverar en inaktiv relation under beräkningen.", grandma: "Normalt går tåget till Stockholm (Order). Med den här biljetten (USERELATIONSHIP) kan tåget tillfälligt gå till Göteborg (Ship)." },
+            { id: 509, type: "boss", cat: "Dynamic Format Strings", icon: "💲", q: "Valuta-växlare?", scenario: "Användaren väljer 'USD' eller 'SEK'. Siffrorna ändras, men 'kr'-tecknet är kvar.", opts: ["Format String Expression", "Calculation Group", "Både A och B", "Går ej"], correct: 2, senior: "Du kan använda Dynamic Format Strings (DAX-uttryck för formatet) direkt på measuren, eller i en Calculation Group för att byta t.ex. '$ #,##0' mot '#,##0 kr'.", grandma: "Kameleont-text. Siffran är densamma, men kläderna (valutan) ändras beroende på vem som tittar." },
+            { id: 510, type: "core", cat: "Cardinality", icon: "📇", q: "Optimera minne?", scenario: "Vilken kolumn tar mest plats i VertiPaq: 'Gender' (2 värden) eller 'TransactionID' (1M unika värden)?", opts: ["Gender (Text tar plats)", "TransactionID (Hög kardinalitet)", "Samma", "Beror på datatypen"], correct: 1, senior: "Hög kardinalitet (många unika värden) dödar komprimeringen (Dictionary Encoding). `TransactionID` är oftast onödig i analys; ta bort den eller splitta den.", grandma: "Det är lätt att packa 1000 röda strumpor (Låg kardinalitet). Det är svårt att packa 1000 unika snöflingor (Hög kardinalitet)." },
+            { id: 511, type: "code", cat: "Iterator Rank", icon: "🏆", q: "RANKX prestanda?", scenario: "Du vill rangordna 1 miljon kunder baserat på försäljning. `RANKX(All(Customers), [Sales])` är långsam.", opts: ["Använd TOPN", "Använd Window Functions", "RANKX(ALLSELECTED)", "Flytta till SQL"], correct: 1, senior: "Window Functions (som `WINDOW`, `OFFSET`, `INDEX`) i DAX är ofta mer performanta än iterativa `RANKX` för stora dataset eftersom de kan utnyttja sortering i cachen.", grandma: "Istället för att springa runt och jämföra dig med alla (RANKX), titta bara på listan som redan hänger på väggen (Window)." },
+            { id: 512, type: "boss", cat: "Bi-Directional", icon: "↔️", q: "Farliga relationer?", scenario: "Du sätter 'Both' på Cross-filter direction för att få en slicer att funka. Vad är risken?", opts: ["Ingen risk", "Ambiguity & Prestanda", "Datat raderas", "Cirkulär referens"], correct: 1, senior: "Bi-directional filters kan skapa oavsiktliga vägar i modellen (Ambiguity) som ger fel siffror, och det tvingar motorn att göra dyra joins. Undvik om möjligt.", grandma: "Om dörren svänger åt båda hållen vet man aldrig vem som kommer in. Håll den enkelriktad för säkerhets skull." },
+            { id: 513, type: "core", cat: "Visual Calculations", icon: "👁️", q: "Running Total utan DAX?", scenario: "Du vill ha en löpande summa i tabellen men orkar inte skriva komplex DAX.", opts: ["Quick Measure", "Visual Calculation", "Excel Export", "Calculated Column"], correct: 1, senior: "Visual Calculations tillåter dig att skriva `RUNNINGSUM([Sales])` direkt i visualen. Det beräknas på den aggregerade matrisen, inte i modellen.", grandma: "Räkna på fingrarna direkt vid bordet (Visual Calc) istället för att gå in i köket och laga en ny rätt (DAX Measure)." },
+            { id: 514, type: "boss", cat: "Snapshot Isolation", icon: "📸", q: "Långsam refresh?", scenario: "Rapporten är blank medan datasetet uppdateras. Användarna klagar.", opts: ["Incremental Refresh", "Query Caching", "Dataset Eviction", "Read/Write XMLA"], correct: 0, senior: "Vid uppdatering (Refresh) låses ibland modellen. Med Incremental Refresh och partitionering kan Power BI hålla gamla data tillgänglig tills den nya partitionen är klar (Snapshot Isolation).", grandma: "Byt duken på bordet utan att ta bort tallrikarna. Gästerna märker ingenting." },
+            { id: 515, type: "code", cat: "TREATAS", icon: "🎭", q: "Virtuell Relation?", scenario: "Du har två tabeller som inte är kopplade, men du vill filtrera den ena med den andra i en specifik measure.", opts: ["RELATED()", "TREATAS()", "USERELATIONSHIP()", "LOOKUPVALUE()"], correct: 1, senior: "`CALCULATE([Sales], TREATAS(VALUES(Table1[ID]), Table2[ID]))` skapar en 'lineage' mellan tabellerna dynamiskt. Det är en virtuell relation.", grandma: "Låtsas att de här två personerna är släkt, bara för den här middagen (TREATAS)." }
+            // --- DATA ENGINEERING & SPARK (ATLAS BATCH 601-615) ---
+            { id: 601, type: "boss", cat: "Spark Partitioning", icon: "🍰", q: "Partitionera på ID?", scenario: "Du har 1 miljard rader. Du partitionerar på 'TransactionID'. Prestandan kraschar.", opts: ["Bra, snabb sökning", "Small Files Problem", "Data Skew", "För lite minne"], correct: 1, senior: "Att partitionera på en kolumn med hög kardinalitet (ID) skapar miljoner små filer. Metadata-hanteringen (Driver) kvävs. Partitionera på låg kardinalitet (Datum/Land).", grandma: "Lägg inte varje risgryn i en egen påse. Lägg dem i säckar märkta med år." },
+            { id: 602, type: "core", cat: "Broadcast Join", icon: "📢", q: "Joinar stor + liten tabell?", scenario: "Du joinar en 100GB tabell med en 10MB tabell. Hur optimerar du?", opts: ["Sort Merge Join", "Broadcast Hash Join", "Shuffle Hash Join", "Cartesian Product"], correct: 1, senior: "Spark skickar en kopia av den lilla tabellen (10MB) till alla noder (Broadcast). Detta eliminerar 'Shuffle' av den stora tabellen över nätverket.", grandma: "Istället för att alla 100 personer ska springa till anslagstavlan, ger vi alla en egen kopia av bladet i handen." },
+            { id: 603, type: "code", cat: "Z-Ordering", icon: "🗂️", q: "Optimera sökning på 2 kolumner?", scenario: "Du filtrerar ofta på både 'Region' och 'Product'. Partitionering räcker inte.", opts: ["OPTIMIZE Table ZORDER BY (Region, Product)", "VACUUM Table", "REPARTITION(Region, Product)", "SORT BY Region"], correct: 0, senior: "Z-Ordering samlokaliserar relaterad data i samma filer, vilket gör 'Data Skipping' extremt effektivt för flera kolumner samtidigt.", grandma: "Sortera biblioteket så att 'Svenska Deckare' står tillsammans, inte bara 'Svenska' böcker utspridda överallt." },
+            { id: 604, type: "boss", cat: "Spark Speculation", icon: "🔮", q: "En seg nod?", scenario: "99 tasks är klara, men 1 task hänger i evigheter på en långsam nod.", opts: ["Döda jobbet", "Aktivera Speculative Execution", "Öka minnet", "Ignorera"], correct: 1, senior: "Speculative Execution startar samma task på en annan nod parallellt. Den som blir klar först vinner, den andra dödas.", grandma: "Om en löpare haltar, skicka in en reserv som springer samma sträcka. Ta tiden på den som kommer i mål först." },
+            { id: 605, type: "code", cat: "Merge Schema", icon: "🧬", q: "Schema Drift i Delta?", scenario: "Dina nya datafiler har en extra kolumn. Append-jobbet kraschar.", opts: [".option('mergeSchema', 'true')", ".mode('overwrite')", "Ignorera kolumnen", "Manuell ALTER TABLE"], correct: 0, senior: "Delta Lake stöder schema evolution. Med `mergeSchema` (eller `autoMerge` i config) uppdateras tabellens schema automatiskt.", grandma: "Om gästen har med sig en extra vän, duka fram en extra tallrik (MergeSchema) istället för att låsa dörren." },
+            { id: 606, type: "core", cat: "Spark UI", icon: "🖥️", q: "Identifiera Spill?", scenario: "Jobbet är långsamt. I Spark UI ser du 'Disk Bytes Spilled'.", opts: ["Bra, sparar RAM", "Dåligt, minnet är slut", "Nätverksproblem", "CPU bottleneck"], correct: 1, senior: "Spill innebär att RAM inte räckte till, så Spark skrev temporär data till disken (långsamt). Öka minnet eller minska partitionerna.", grandma: "Du kan inte hålla alla bollar i luften samtidigt, så du måste lägga ner några på marken (Spill). Det tar tid att plocka upp dem igen." },
+            { id: 607, type: "boss", cat: "Delta History", icon: "📜", q: "Städa historik?", scenario: "Din lagringskostnad skenar. Du har 2 års historik i Delta Log.", opts: ["Radera _delta_log mappen", "VACUUM RETAIN 7 DAYS", "OPTIMIZE", "Drop Table"], correct: 1, senior: "`VACUUM` raderar fysiska filer som inte längre behövs av den senaste versionen (bortsett från retention-perioden). OBS: Omöjliggör Time Travel längre bak än gränsen.", grandma: "Töm papperskorgen. Du får mer plats, men du kan inte längre ångra dig och fiska upp det du slängde förra veckan." },
+            { id: 608, type: "code", cat: "PySpark UDF", icon: "🐌", q: "Python function i Spark?", scenario: "Du använder en standard Python-loop för att processa data rad för rad i en DataFrame.", opts: ["Snabbt", "Extremt långsamt (Serialization)", "Bästa praxis", "Enda sättet"], correct: 1, senior: "Standard Python UDFs tvingar data att flyttas mellan JVM och Python-processen (Pickling). Använd Pandas UDF (Vectorized) eller Native Spark Functions.", grandma: "Att översätta varje ord via en tolk (Python UDF) går långsamt. Att tala språket direkt (Native Spark) går snabbt." },
+            { id: 609, type: "boss", cat: "High Concurrency", icon: "⚡", q: "Flera användare, en session?", scenario: "10 analytiker kör små queries i samma Notebook. Starttiden är för lång.", opts: ["Standard Session", "High Concurrency Mode (Livy)", "Egna kluster", "SQL Endpoint"], correct: 1, senior: "High Concurrency (delade sessioner) låter flera användare dela på samma Spark Context, vilket eliminerar uppstartstiden för varje person.", grandma: "Alla åker i samma buss (High Concurrency) istället för att alla ska starta varsin bil." },
+            { id: 610, type: "code", cat: "Explode", icon: "💥", q: "Array till rader?", scenario: "En kolumn innehåller `['A', 'B', 'C']`. Du vill ha 3 rader.", opts: ["split()", "explode()", "flatten()", "array_contains()"], correct: 1, senior: "`explode()` tar en array och skapar en ny rad för varje element i arrayen. Varning: Kan öka dataraderna exponentiellt.", grandma: "Spräng piñatan (Explode). Varje godisbit som ramlar ut blir en egen liten hög." },
+            { id: 611, type: "core", cat: "Auto-Loader", icon: "☁️", q: "Ladda filer effektivt?", scenario: "Du får 10 000 nya filer varje dag i S3. `spark.read` tar för lång tid att lista dem.", opts: ["Copy Activity", "Auto Loader (cloudFiles)", "Manuellt", "Trigger"], correct: 1, senior: "Auto Loader (`format('cloudFiles')`) använder Notification Services (SNS/EventGrid) för att veta exakt vilka filer som är nya, utan att behöva lista hela mappen.", grandma: "Istället för att leta igenom hela brevlådan varje gång, väntar vi på att flaggan fälls upp när posten kommer." },
+            { id: 612, type: "boss", cat: "Notebook Reference", icon: "🔗", q: "Anropa annan Notebook?", scenario: "Du har en 'Setup'-notebook med funktioner. Du vill använda dem i din analys.", opts: ["Kopiera koden", "%run ./Setup", "import setup", "mssparkutils.run()"], correct: 1, senior: "Magical command `%run` exekverar den andra notebooken i samma kontext. Variabler och funktioner blir tillgängliga direkt.", grandma: "Läs receptboken (Setup) innan du börjar laga mat, så vet du hur man gör såsen." },
+            { id: 613, type: "code", cat: "SCD Type 2", icon: "⏳", q: "Historikhantering?", scenario: "Kund byter adress. Du vill spara både gamla och nya adressen med giltighetstider.", opts: ["Overwrite", "Append", "MERGE med logik", "Update"], correct: 2, senior: "SCD Type 2 kräver en `MERGE` operation som stänger den gamla raden (sätter EndDate) och infogar den nya raden (sätter StartDate).", grandma: "Stryk inte över den gamla adressen i adressboken. Skriv den nya under och notera när flytten skedde." },
+            { id: 614, type: "boss", cat: "Data Skipping", icon: "⏭️", q: "Hur funkar det?", scenario: "Spark läser bara 1 av 10 filer trots att du söker i hela mappen.", opts: ["Indexering", "Min/Max Statistik i Footer", "Slumpen", "Caching"], correct: 1, senior: "Parquet/Delta lagrar Min/Max värden för varje kolumn i filens metadata. Om ditt sökvärde inte ryms inom intervallet, hoppar Spark över hela filen.", grandma: "Om det står 'A-F' på pärmens rygg, behöver du inte öppna den om du letar efter 'Zlatan'." },
+            { id: 615, type: "core", cat: "Environment", icon: "🌍", q: "Spark Compute?", scenario: "Vad är en 'Spark Pool' i Fabric?", opts: ["Det finns inga Pooler", "Starter Pool & Custom Pool", "Serverless SQL", "Dataflow Compute"], correct: 1, senior: "I Fabric startar Starter Pools på sekunder (Live Pool). Du kan skapa Custom Pools för att specificera bibliotek, nodstorlek och autoscale-gränser.", grandma: "Starter Pool är hyrbilen som står redo. Custom Pool är din egen bil som du har trimmat och stylat precis som du vill." }
+            // --- DATA FACTORY & PIPELINES (ATLAS BATCH 701-715) ---
+            { id: 701, type: "boss", cat: "Pipeline vs Dataflow", icon: "🔀", q: "När använda vad?", scenario: "Du ska flytta data från A till B och samtidigt aggregera den.", opts: ["Pipeline Copy", "Dataflow Gen2", "Notebook", "Shortcut"], correct: 1, senior: "Pipelines är bäst för kontrollflöde och ren kopiering (Orchestration). Dataflow Gen2 är bäst för visuell transformation (Low-code ETL).", grandma: "Pipeline är logistikchefen som flyttar lådor. Dataflow är arbetaren som öppnar lådorna och bygger om innehållet." },
+            { id: 702, type: "code", cat: "Lookup Activity", icon: "🔎", q: "Begränsning?", scenario: "Du vill hämta en lista med 10 000 tabellnamn via Lookup för att loopa över dem.", opts: ["Det funkar bra", "Max 5000 rader / 4MB", "Max 100 rader", "Kräver Premium"], correct: 1, senior: "Lookup Activity har en hård gräns på 5000 rader eller 4MB payload. För större listor, använd Copy till en fil eller Query i ForEach.", grandma: "Du kan bara bära 5000 papper i händerna. Behöver du fler måste du hämta en vagn (annan lösning)." },
+            { id: 703, type: "core", cat: "Triggers", icon: "🔫", q: "Starta när fil landar?", scenario: "Så fort en CSV landar i ADLS Gen2 ska pipelinen starta.", opts: ["Schedule Trigger", "Tumbling Window", "Storage Event Trigger", "Manual Trigger"], correct: 2, senior: "Storage Event Trigger lyssnar på 'BlobCreated' händelser i Azure. Det är händelsestyrd arkitektur.", grandma: "Dörrklocka. När någon trycker på knappen (filen landar), öppnar du dörren (pipelinen startar)." },
+            { id: 704, type: "boss", cat: "Expression Language", icon: "🗣️", q: "Referera föregående steg?", scenario: "Du vill använda output från 'Activity1' i 'Activity2'.", opts: ["@activity('Activity1').output.value", "Activity1.output", "@pipeline().Activity1", "#Activity1"], correct: 0, senior: "Dynamiskt innehåll i Pipelines använder `@`-syntax. Output är oftast JSON.", grandma: "Du måste peka exakt: 'Det som han där borta sa' (@activity...output)." },
+            { id: 705, type: "boss", cat: "Staging Area", icon: "🏗️", q: "Copy från Oracle?", scenario: "Du kopierar från on-prem Oracle till Lakehouse. Varför aktivera Staging?", opts: ["Säkerhet", "Prestanda & Kompatibilitet", "Billigare", "Krävs alltid"], correct: 1, senior: "Staging (via Blob/ADLS) tillåter parallell kopiering och hanterar formatkonvertering (t.ex. PolyBase) som direkt kopiering inte klarar.", grandma: "Mellanlanda på en lastkaj (Staging) för att lasta om från tåg till lastbil, istället för att försöka köra tåget på motorvägen." },
+            { id: 706, type: "code", cat: "ForEach Parallel", icon: "bars", q: "Köra sekventiellt?", scenario: "Du har en ForEach-loop som måste köra tabellerna i ordning A -> B -> C.", opts: ["Går ej i ForEach", "Kryssa i 'Sequential'", "Batch Count = 1", "Använd Until Loop"], correct: 1, senior: "Default kör ForEach parallellt (upp till 20 eller 50). Markera 'Sequential' för att tvinga dem att köra en i taget.", grandma: "En kö i kassan (Sequential) vs alla rusar mot dörren samtidigt (Parallel)." },
+            { id: 707, type: "core", cat: "Get Metadata", icon: "🗃️", q: "Validera fil finns?", scenario: "Pipelinen får inte krascha om filen saknas. Hur kollar du först?", opts: ["If Condition", "Get Metadata + If Condition", "Try/Catch", "Validation Activity"], correct: 1, senior: "Använd Get Metadata med 'Exists' argumentet. Om false, hoppa över eller kör en annan väg i en If Condition.", grandma: "Knacka på dörren (Get Metadata). Om ingen svarar, gå därifrån. Gå inte bara rakt in." },
+            { id: 708, type: "boss", cat: "Dataflow Gen2 Dest", icon: "🎯", q: "Skriva till SQL?", scenario: "Du vill skriva resultatet av Dataflow Gen2 till en Azure SQL Databas.", opts: ["Kräver Gateway", "Data Destination", "Går ej, bara Lakehouse", "Power BI Dataset"], correct: 1, senior: "Data Destination i Gen2 stöder nu Azure SQL, Lakehouse, KQL och Warehouse. Det ersätter gamla 'Output Destination'.", grandma: "Adresslappen på paketet. Du kan skicka det till sjön (Lake) eller till lagret (SQL)." },
+            { id: 709, type: "core", cat: "Pipeline Parameters", icon: "🎚️", q: "Återanvändbar Pipeline?", scenario: "Du vill använda samma pipeline för 10 olika tabeller.", opts: ["Hårdkoda namn", "Pipeline Parameters", "Global Variables", "Environment Variables"], correct: 1, senior: "Definiera parametrar (TableName, Schema) i pipelinens inställningar och skicka in värdena vid körning (Trigger time).", grandma: "En blankett där du fyller i namnet. Samma blankett funkar för alla." },
+            { id: 710, type: "boss", cat: "Script Activity", icon: "📜", q: "Köra T-SQL?", scenario: "Du behöver köra en 'TRUNCATE TABLE' i Warehouset innan laddning.", opts: ["Stored Procedure Activity", "Script Activity", "Lookup Activity", "Notebook"], correct: 1, senior: "Script Activity är den moderna ersättaren för Stored Proc activity. Den kan köra T-SQL (NonQuery och Query) direkt mot Warehouse/SQL.", grandma: "Skicka ett SMS (Script) med ordern 'Töm lagret'. Enkelt och snabbt." },
+            { id: 711, type: "code", cat: "Web Activity", icon: "🌐", q: "Anropa REST API?", scenario: "Du vill hämta valutakurser från ett externt API.", opts: ["Copy Activity", "Web Activity", "Script Activity", "Dataflow"], correct: 1, senior: "Web Activity gör HTTP GET/POST anrop. Svaret kan sedan parsas i efterföljande aktiviteter.", grandma: "Ringa upp banken (Web Activity) och fråga vad dollarn står i." },
+            { id: 712, type: "boss", cat: "Pipeline Return", icon: "↩️", q: "Skicka värde tillbaka?", scenario: "En 'Child Pipeline' räknar ut ett värde som 'Master Pipeline' behöver.", opts: ["Set Variable", "Return Value (Set Pipeline Return Value)", "Skriv till fil", "Global Parameter"], correct: 1, senior: "Använd aktiviteten 'Set Pipeline Return Value' i slutet av Child-pipelinen för att skicka data tillbaka till anroparen.", grandma: "Springpojken kommer tillbaka och lämnar kvittot (Return Value) till chefen." },
+            { id: 713, type: "core", cat: "Monitoring", icon: "📊", q: "Gantt-schema?", scenario: "Du vill se exakt vilken aktivitet som tog längst tid i en pipeline-körning.", opts: ["Monitor Hub -> Gantt View", "Log Analytics", "Spark UI", "Metric App"], correct: 0, senior: "I Monitoring Hub kan du se pipeline-körningen som ett Gantt-schema, vilket visualiserar den 'kritiska linjen' och flaskhalsar.", grandma: "Tidslinjen visar vem som sölar." },
+            { id: 714, type: "boss", cat: "Fast Copy", icon: "⚡", q: "Dataflow Gen2 Prestanda?", scenario: "Dataflow Gen2 är långsamt på att skriva till Lakehouse.", opts: ["Aktivera 'Fast Copy'", "Stäng av Staging", "Öka Compute", "Använd Pipeline"], correct: 0, senior: "Se till att 'Require Fast Copy' är aktiverat i Dataflow-inställningarna. Det använder V-Order och parallellisering för att skriva snabbare.", grandma: "Använd expressfilen (Fast Copy) istället för den vanliga kön." },
+            { id: 715, type: "code", cat: "Gateway", icon: "🚪", q: "On-Prem SQL?", scenario: "Pipeline ska hämta data från lokal server. Felmeddelande: 'Connection failed'.", opts: ["Öppna brandväggen", "Installera On-Prem Data Gateway", "Använd VPN", "Byt till Cloud"], correct: 1, senior: "För att nå data bakom en brandvägg/On-Prem krävs en Data Gateway (Standard eller VNET) installerad i nätverket.", grandma: "Du behöver en agent på insidan (Gateway) som kan smuggla ut datat." }
+        
+        ];
 
-      // --- DRILL GENERATOR FOR FILLER ---
-      const drillTemplates = [
-        {
-          t: "Power BI Refresh",
-          s: "Max refresh tid?",
-          sc: "Din dataset-uppdatering i en F64-kapacitet misslyckas konsekvent efter exakt 5 timmar.",
-          v: ["2h", "5h", "Unlimited", "48h"],
-          c: 1,
-          senior:
-            "Premium/Fabric-kapacitet har en hård gräns på 5 timmar för dataset refresh (om inte XMLA används).",
-          meta: "Parkeringstiden går ut.",
-        },
-        {
-          t: "Notebook Git",
-          s: "Diffa kod?",
-          sc: "Du ser en konflikt i en Notebook i Azure DevOps. Hur ser du vad som ändrats visuellt?",
-          v: ["Text comparison", "Visuell Diff (nbdime)", "Går ej", "Binary"],
-          c: 1,
-          senior:
-            "Fabric Git-integrationen renderar en visuell diff för Notebooks, så du slipper läsa rå JSON.",
-          meta: "Jämför bilderna, inte ettor och nollor.",
-        },
-        {
-          t: "SQL Merge",
-          s: "Upsert mönster?",
-          sc: "Du behöver uppdatera existerande rader OCH sätta in nya rader i en enda körning.",
-          v: ["INSERT", "UPDATE", "MERGE", "COPY"],
-          c: 2,
-          senior:
-            "MERGE-kommandot hanterar Insert, Update och Delete i en enda atomisk transaktion.",
-          meta: "En tvåvägsdragkedja som stänger och öppnar samtidigt.",
-        },
-        {
-          t: "Key Vault",
-          s: "Hemligheter?",
-          sc: "Du har en API-nyckel i din Notebook-kod. Säkerhetsteamet är arga.",
-          v: ["Hårdkoda", "Azure Key Vault", "Env Var", "Textfil"],
-          c: 1,
-          senior:
-            "Använd aldrig hårdkodade lösenord. Använd `mssparkutils.credentials.getSecret()` kopplat till AKV.",
-          meta: "Lås in nyckeln i ett bankfack istället för att lägga den under mattan.",
-        },
-      ];
+        // --- DRILL GENERATOR FOR FILLER (Ensuring continuous IDs 1-305) ---
+        const drillTemplates = [
+            { t: "Power BI Refresh", s: "Max refresh tid?", sc: "Din dataset-uppdatering i en F64-kapacitet misslyckas konsekvent efter exakt 5 timmar.", v: ["2h", "5h", "Unlimited", "48h"], c: 1, senior: "Premium/Fabric-kapacitet har en hård gräns på 5 timmar för dataset refresh (om inte XMLA används).", meta: "Parkeringstiden går ut." },
+            { t: "Notebook Git", s: "Diffa kod?", sc: "Du ser en konflikt i en Notebook i Azure DevOps. Hur ser du vad som ändrats visuellt?", v: ["Text comparison", "Visuell Diff (nbdime)", "Går ej", "Binary"], c: 1, senior: "Fabric Git-integrationen renderar en visuell diff för Notebooks, så du slipper läsa rå JSON.", meta: "Jämför bilderna, inte ettor och nollor." },
+            { t: "SQL Merge", s: "Upsert mönster?", sc: "Du behöver uppdatera existerande rader OCH sätta in nya rader i en enda körning.", v: ["INSERT", "UPDATE", "MERGE", "COPY"], c: 2, senior: "MERGE-kommandot hanterar Insert, Update och Delete i en enda atomisk transaktion.", meta: "En tvåvägsdragkedja som stänger och öppnar samtidigt." },
+            { t: "XMLA Write", s: "Redigera modell?", sc: "Du försöker ansluta Tabular Editor 3 till din Semantic Model men får 'Access Denied' vid skrivning.", v: ["Default", "Tenant Setting", "Capacity Setting", "Workspace"], c: 2, senior: "XMLA Read/Write är avstängt som standard. Det måste aktiveras explicit på Kapacitets-inställningarna.", meta: "Huvudströmbrytaren i källaren måste slås på." },
+            { t: "Key Vault", s: "Hemligheter?", sc: "Du har en API-nyckel i din Notebook-kod. Säkerhetsteamet är arga.", v: ["Hårdkoda", "Azure Key Vault", "Env Var", "Textfil"], c: 1, senior: "Använd aldrig hårdkodade lösenord. Använd `mssparkutils.credentials.getSecret()` kopplat till AKV.", meta: "Lås in nyckeln i ett bankfack istället för att lägga den under mattan." },
+            { t: "Capacity Pause", s: "Spara pengar?", sc: "Chefen vill sänka kostnaderna över helgen för utvecklingsmiljön.", v: ["Går ej", "Pausa", "Radera", "Stäng Azure"], c: 1, senior: "F-SKU (Azure) kan pausas manuellt eller via script. P-SKU (M365/Office) kan inte pausas.", meta: "Släck lampan när du går ut ur rummet." },
+            { t: "Dynamic Pipeline", s: "Loopa lista?", sc: "Du har 50 csv-filer i en mapp som ska processas en och en.", v: ["Get Metadata -> ForEach", "Lookup", "If Condition", "Switch"], c: 0, senior: "Använd 'Get Metadata' (ChildItems) för att hämta filnamnen, och skicka listan till en ForEach-loop.", meta: "Gör ett namnupprop för att se vilka som är här, sen ge dem uppgifter." }
+        ];
 
-      for (let i = 11; i <= 200; i++) {
-        if (i >= 101 && i <= 102) continue; // Skip existing boss items
-        if (i >= 201) continue; // Skip code items
-        const tmpl = drillTemplates[i % drillTemplates.length];
-        questionBank.push({
-          id: i,
-          type: i < 100 ? "core" : "boss",
-          cat: `Drill: ${tmpl.t}`,
-          icon: "🎯",
-          q: `${tmpl.s}`,
-          scenario: tmpl.sc,
-          opts: tmpl.v,
-          correct: tmpl.c,
-          senior: tmpl.senior,
-          grandma: tmpl.meta,
-        });
-      }
-
-      // CHEAT SHEET DATA
-      const cheatData = [
-        {
-          domain: "🏗️ DOMAIN 1: INGESTION (Få in datat)",
-          color: "border-blue-500",
-          rows: [
-            {
-              sc: "Kunden har data i AWS S3 / Google Cloud",
-              sol: "OneLake Shortcut",
-              log: "Zero Copy. Flytta inte 50TB. Peka på det.",
-            },
-            {
-              sc: "Data kommer som filer i en mapp (CSV/Parquet)",
-              sol: "Copy Activity (Pipeline)",
-              log: "Lastbilen. Pipelines är optimerade för bulk-flytt av filer.",
-            },
-            {
-              sc: "Data kommer i realtid (IoT/Loggar)",
-              sol: "Eventstream + KQL",
-              log: "Brandslangen. KQL dricker snabbast. Spark hinner inte med.",
-            },
-            {
-              sc: "Kunden har en SQL Server On-Prem (lokalt)",
-              sol: "On-Premises Data Gateway",
-              log: "Tunneln. Du måste borra genom brandväggen.",
-            },
-            {
-              sc: "Kunden har Cosmos DB eller Azure SQL",
-              sol: "Mirroring",
-              log: "Spegeln. Replikerar automatiskt utan kod. Datat dyker bara upp.",
-            },
-            {
-              sc: "Komplex API-hämtning med loopar/auth",
-              sol: "Notebook (Python)",
-              log: "Kirurgen. Pipelines är klumpiga för komplex logik. Python löser allt.",
-            },
-          ],
-        },
-        {
-          domain: "🍳 DOMAIN 2: TRANSFORMATION (Laga maten)",
-          color: "border-purple-500",
-          rows: [
-            {
-              sc: "Teamet kan SQL men hatar Python",
-              sol: "Stored Procedures (Warehouse)",
-              log: "Verktygslådan. Tvinga inte fram språkbyte om kompetensen saknas.",
-            },
-            {
-              sc: "Teamet kan inte koda alls (Low-code)",
-              sol: "Dataflow Gen2",
-              log: "Visuellt. Enkelt underhåll, men långsammare än kod.",
-            },
-            {
-              sc: "Extremt komplex logik / Machine Learning",
-              sol: "Spark Notebooks",
-              log: "Tungt Artilleri. När SQL inte räcker till.",
-            },
-            {
-              sc: "Du har miljontals små filer (prestanda död)",
-              sol: "OPTIMIZE & VACUUM",
-              log: "Städpatrullen. Slå ihop små filer och släng skräpet.",
-            },
-            {
-              sc: "Datat är 'smutsigt' (fel format, dubbletter)",
-              sol: "Land i Bronze -> Tvätta till Silver",
-              log: "Medallion. Blanda aldrig rått kött med salladen.",
-            },
-          ],
-        },
-        {
-          domain: "💾 DOMAIN 3: STORAGE (Lagra & Servera)",
-          color: "border-emerald-500",
-          rows: [
-            {
-              sc: "Power BI rapporten är långsam",
-              sol: "DirectLake",
-              log: "Direktlinjen. Snabbare än DirectQuery, enklare än Import.",
-            },
-            {
-              sc: "Tabellen är enorm (miljarder rader)",
-              sol: "Partitionering",
-              log: "Kartoteket. Läs bara relevanta mappar (t.ex. År/Månad).",
-            },
-            {
-              sc: "Du behöver historik / Undo",
-              sol: "Delta Time Travel",
-              log: "Tidsmaskinen. Backa bandet till hur datat såg ut igår.",
-            },
-            {
-              sc: "Mass-ladda data till Warehouse",
-              sol: "T-SQL COPY INTO",
-              log: "Hjullastaren. INSERT är en tesked. COPY INTO är en lastbil.",
-            },
-            {
-              sc: "Du vill testa en destruktiv ändring",
-              sol: "CLONE TABLE (Zero Copy)",
-              log: "Tvillingen. Gratis kopia på noll sekunder. Lek med kopian.",
-            },
-          ],
-        },
-        {
-          domain: "🛡️ DOMAIN 4: SECURITY (Vakten)",
-          color: "border-amber-500",
-          rows: [
-            {
-              sc: "Säljare får bara se sina egna kunder",
-              sol: "Row-Level Security (RLS)",
-              log: "Skygglappar. Filtrera rader baserat på USER_NAME().",
-            },
-            {
-              sc: "Ingen får se personnummer (SSN) alls",
-              sol: "Column-Level Security",
-              log: "Saxen. Klipp bort hela kolumnen för obehöriga.",
-            },
-            {
-              sc: "Testare ska se format (XXX-1234) men inte data",
-              sol: "Dynamic Data Masking",
-              log: "Pixellering. Dölj värdet men behåll formatet.",
-            },
-            {
-              sc: "Vem raderade tabellen?",
-              sol: "Monitoring Hub / Audit Logs",
-              log: "Svarta lådan. Hitta den skyldige.",
-            },
-            {
-              sc: "Du vill dela rapporten externt",
-              sol: "Entra ID Guest User (B2B)",
-              log: "Gästpasset. Skapa inte ett nytt konto, bjud in gästen.",
-            },
-          ],
-        },
-      ];
-
-      // STRATEGISKA REGLER (För slutet av Cheat Sheet sidan)
-      const strategicRules = [
-        {
-          t: "Flytta aldrig data i onödan.",
-          d: "Använd Shortcuts först. Kopiera bara om du måste transformera.",
-        },
-        {
-          t: "Läs aldrig allt om du bara behöver lite.",
-          d: "Använd Partitionering och Incremental Refresh.",
-        },
-        {
-          t: "Rapporten ska vara dum.",
-          d: "Flytta logiken till Warehouse/Dataflow. Rapporten ska bara visa resultatet.",
-        },
-        {
-          t: "Hårdkoda aldrig.",
-          d: "Använd Parametrar i Pipelines och Key Vault för lösenord.",
-        },
-      ];
-
-      // CODEX DATA
-      const codexData = [
-        {
-          title: "Domain 1: Plan & Manage (The City Planner)",
-          desc: "Architecture, Administration, and Governance.",
-          color: "border-blue-500",
-          topics: [
-            {
-              concept: "OneLake",
-              boring:
-                "A single, unified, logical data lake for the whole organization based on ADLS Gen2.",
-              atlas:
-                "OneDrive för Data. En enda gigantisk hårddisk som alla dina verktyg (Spark, SQL, PBI) delar på. Du slipper kopiera filer mellan olika konton. 'One Copy' to rule them all.",
-            },
-            {
-              concept: "Capacity (F-SKU vs P-SKU)",
-              boring:
-                "Fabric Capacity is a dedicated set of resources used to run Fabric workloads.",
-              atlas:
-                "Hyran för lägenheten. F-SKU är Azure (Pay-as-you-go, du kan pausa). P-SKU är Microsoft 365 (Månadshyra, kan inte pausas). Om kapaciteten tar slut går proppen (Throttling/Smoothing).",
-            },
-            {
-              concept: "Shortcuts",
-              boring:
-                "Objects in OneLake that point to other storage locations without moving data.",
-              atlas:
-                "Genvägar på skrivbordet. Filen ligger kvar i Amazon S3 eller Google Cloud, men du dubbelklickar på den i Fabric som om den låg där. Ingen kopiering = Ingen väntetid.",
-            },
-            {
-              concept: "Workspaces & Domains",
-              boring:
-                "Containers for items that also define security boundaries.",
-              atlas:
-                "Workspace = Ett projekt-rum där teamet jobbar. Domain = En hel avdelning (HR, Finans). Domains hjälper dig att gruppera workspaces så att Finans-chefen kan styra sina egna rum utan att ringa IT.",
-            },
-            {
-              concept: "Git Integration (PBIP)",
-              boring:
-                "Source control integration utilizing the Power BI Project (.pbip) format.",
-              atlas:
-                "Tidsmaskin för koden. Förr var PBI-filer binära klumpar. Nu är de textmappar (PBIP) som gör att du kan se exakt VEM som ändrade VILKEN rad i koden.",
-            },
-          ],
-        },
-        {
-          title: "Domain 2: Ingest & Transform (The Factory Floor)",
-          desc: "Data Engineering, Pipelines, and Data Science.",
-          color: "border-purple-500",
-          topics: [
-            {
-              concept: "Lakehouse vs Warehouse",
-              boring:
-                "Lakehouse uses Spark/Python primarily. Warehouse uses T-SQL primarily.",
-              atlas:
-                "Lakehouse = Din 'Messy Desk'. Här dumpar du allt (Bilder, CSV, JSON). Du använder Python (Spark) för att städa. Warehouse = Ditt 'Arkivskåp'. Här får bara färdiga, rena tabeller ligga. Endast strikt SQL tillåtet.",
-            },
-            {
-              concept: "Dataflow Gen2",
-              boring:
-                "Low-code data ingestion and transformation tool based on Power Query.",
-              atlas:
-                "Power Query på steroider. Nu kan den skriva data till en databas (Destination), inte bara läsa. Perfekt för 'Medborgar-utvecklare' som inte kan koda Python.",
-            },
-            {
-              concept: "Spark Notebooks",
-              boring:
-                "Interactive coding environment supporting Python, Scala, R, and Spark SQL.",
-              atlas:
-                "Kungens verktyg (Python). Om du behöver göra tunga lyft, maskininlärning eller komplex logik som SQL inte klarar av – använd en Notebook. Det är här magin händer.",
-            },
-            {
-              concept: "Medallion Architecture",
-              boring:
-                "Multi-hop architecture: Bronze (Raw), Silver (Cleaned), Gold (Curated).",
-              atlas:
-                "Matlagning. Bronze = Råvarorna direkt från bonden (smutsiga morötter). Silver = Skalade och hackade grönsaker. Gold = Den färdiga grytan serverad på bordet.",
-            },
-            {
-              concept: "V-Order",
-              boring:
-                "Write-optimization technology for Parquet files to enhance read performance.",
-              atlas:
-                "Sortera bokhyllan perfekt. Det tar lite längre tid att ställa in böckerna (skriva), men det går blixtsnabbt att hitta dem sen (läsa).",
-            },
-          ],
-        },
-        {
-          title: "Domain 3: Model & Serve (The Librarian)",
-          desc: "Data Warehousing and Semantic Models.",
-          color: "border-emerald-500",
-          topics: [
-            {
-              concept: "DirectLake",
-              boring:
-                "A semantic model storage mode where Power BI reads directly from Delta Parquet files.",
-              atlas:
-                "Drick direkt ur kranen. Gamla 'Import Mode' krävde att du fyllde flaskor (laddade RAM) och körde dem till PBI. DirectLake drar ett rör rakt in i filen. Blixtsnabbt, noll väntetid.",
-            },
-            {
-              concept: "Star Schema",
-              boring:
-                "Modeling technique with Fact tables and Dimension tables.",
-              atlas:
-                "Fortfarande kungen. Power BI hatar platta tabeller (Excel-style). Bygg alltid en Stjärna: En händelse i mitten (Fact: Säljtransaktion) omringad av 'Vem, Vad, Var, När' (Dimensions).",
-            },
-            {
-              concept: "T-SQL COPY INTO",
-              boring: "High-performance command to load data into Warehouse.",
-              atlas:
-                "Brandslangen. Använd inte 'INSERT INTO' (Trädgårdsslang) om du ska fylla en pool med data. COPY INTO är optimerat för massiv datamängd.",
-            },
-            {
-              concept: "Incremental Refresh",
-              boring:
-                "Partition-based refresh policy to only load changed data.",
-              atlas:
-                "Tvätta bara smutstvätten. Varför tvätta hela garderoben (ladda om 10 år data) när du bara använde en tröja igår?",
-            },
-          ],
-        },
-        {
-          title: "Domain 4: Analyze (The Art Gallery)",
-          desc: "Power BI and Real-Time Intelligence.",
-          color: "border-amber-500",
-          topics: [
-            {
-              concept: "Semantic Link (SemPy)",
-              boring:
-                "A Python library bridging the gap between Data Science and Power BI.",
-              atlas:
-                "Bryggan. Låter dig läsa dina Power BI-mått direkt in i en Python Notebook. Sluta räkna om 'Gross Margin' i Python, hämta den från modellen istället!",
-            },
-            {
-              concept: "KQL (Kusto)",
-              boring:
-                "Query language optimized for large volumes of real-time/log data.",
-              atlas:
-                "Sökmotorn. SQL är dåligt på miljarder rader text-loggar. KQL är byggt för att hitta nålen i höstacken på millisekunder. Tänk 'Ctrl+F' för Big Data.",
-            },
-            {
-              concept: "Data Activator (Reflex)",
-              boring: "No-code system to drive actions from data patterns.",
-              atlas:
-                "Larmklockan. Den tittar på din data dygnet runt. Om 'Temperatur > 50', skicka ett Teams-meddelande direkt.",
-            },
-          ],
-        },
-      ];
-
-      // ==========================================
-      //  STATE & FUNCTIONS
-      // ==========================================
-      let state = {
-        view: "simulator",
-        score: 0,
-        streak: 0,
-        mode: "all",
-        activeDeck: [],
-        currentIndex: 0,
-        attemptsLeft: 3,
-        isLocked: false,
-        apiKey: "",
-        language: "sv",
-      };
-
-      const saved = localStorage.getItem("dp600_atlas_ultimate");
-      if (saved) {
-        const p = JSON.parse(saved);
-        state.score = p.score || 0;
-        state.streak = p.streak || 0;
-        state.apiKey = p.apiKey || "";
-        state.language = p.language || "sv";
-      }
-
-      function init() {
-        setMode("all");
-        applyLanguage();
-        renderCodex();
-        renderCheatSheet();
-        updateStatsUI();
-      }
-
-      // Render Cheat Sheet
-      function renderCheatSheet() {
-        const container = document.getElementById("cheat-content");
-        const t = langData[state.language];
-        let html = "";
-
-        // Render Tables
-        cheatData.forEach((d) => {
-          let rows = "";
-          d.rows.forEach((r) => {
-            rows += `<tr><td class="cheat-scenario">${r.sc}</td><td class="cheat-solution">${r.sol}</td><td class="cheat-logic">${r.log}</td></tr>`;
-          });
-          html += `<div class="codex-card border-l-4 ${d.color}"><h3 class="text-2xl font-bold text-white mb-6">${d.domain}</h3><div class="overflow-x-auto"><table class="w-full text-left cheat-table"><thead class="bg-white/5 text-stone-100 uppercase"><tr><th>${t.cheat_th_sc}</th><th>${t.cheat_th_sol}</th><th>${t.cheat_th_log}</th></tr></thead><tbody class="divide-y divide-white/5">${rows}</tbody></table></div></div>`;
-        });
-
-        // Render Strategic Rules
-        html += `<div class="bg-gradient-to-r from-stone-900 to-black p-8 rounded-2xl border border-stone-800 text-center"><h3 class="text-xl font-bold text-white mb-6 uppercase tracking-widest">${t.label_strategic_rules}</h3><div class="grid md:grid-cols-2 gap-6 text-left"><div class="p-4 bg-white/5 rounded-lg border border-white/10"><span class="text-amber-500 font-bold block mb-1">1. Flytta aldrig data i onödan.</span><span class="text-stone-400 text-sm">Använd Shortcuts först.</span></div><div class="p-4 bg-white/5 rounded-lg border border-white/10"><span class="text-amber-500 font-bold block mb-1">2. Läs aldrig allt.</span><span class="text-stone-400 text-sm">Använd Partitionering.</span></div></div></div>`;
-
-        container.innerHTML = html;
-      }
-
-      // Render Codex
-      function renderCodex() {
-        const container = document.getElementById("codex-content");
-        const t = langData[state.language];
-        let html = "";
-        codexData.forEach((domain) => {
-          let topicsHtml = "";
-          domain.topics.forEach((tp) => {
-            topicsHtml += `<div class="mb-8 last:mb-0"><div class="topic-header"><span class="text-amber-500 text-xl">●</span><h4 class="text-white font-bold text-lg">${tp.concept}</h4></div><div class="boring-def">"${tp.boring}"</div><div class="atlas-trans"><div class="atlas-label">${t.label_atlas_says}</div>${tp.atlas}</div></div>`;
-          });
-          html += `<div class="codex-card ${domain.color}"><h3 class="text-2xl font-black text-white mb-2">${domain.title}</h3><p class="text-stone-400 text-sm mb-8 border-b border-stone-800 pb-4">${domain.desc}</p><div>${topicsHtml}</div></div>`;
-        });
-        container.innerHTML = html;
-      }
-
-      // ... [Rest of Logic from v4: switchView, setMode, loadQuestion, handleAnswer, API calls] ...
-
-      function switchView(viewName) {
-        state.view = viewName;
-        const views = ["simulator", "codex", "cheatsheet", "coach"];
-        views.forEach((v) => {
-          document.getElementById(`view-${v}`).classList.add("hidden");
-          document.getElementById(
-            `nav-${v === "cheatsheet" ? "cheat" : v === "simulator" ? "sim" : v}`,
-          ).className =
-            v === "coach"
-              ? "hover:text-white transition py-2 flex items-center gap-1"
-              : "hover:text-white transition py-2";
-        });
-        document.getElementById(`view-${viewName}`).classList.remove("hidden");
-        const navId =
-          viewName === "cheatsheet"
-            ? "nav-cheat"
-            : viewName === "simulator"
-              ? "nav-sim"
-              : `nav-${viewName}`;
-        document.getElementById(navId).classList.add("nav-active");
-        const filters = document.getElementById("sim-filters");
-        if (viewName === "simulator") filters.classList.remove("opacity-0");
-        else filters.classList.add("opacity-0");
-      }
-
-      function setMode(mode) {
-        state.mode = mode;
-        document
-          .querySelectorAll('button[id^="btn-"]')
-          .forEach(
-            (b) =>
-              (b.className =
-                "px-3 py-1 text-xs font-bold rounded text-stone-400 hover:text-white transition"),
-          );
-        if (mode === "code")
-          document.getElementById(`btn-${mode}`).className =
-            "px-3 py-1 text-xs font-bold rounded text-cyan-400 bg-cyan-900/30 border border-cyan-500 transition shadow-inner ml-1";
-        else
-          document.getElementById(`btn-${mode}`).className =
-            "px-3 py-1 text-xs font-bold rounded text-amber-500 bg-white/10 transition shadow-inner";
-
-        if (mode === "all") state.activeDeck = [...questionBank];
-        else state.activeDeck = questionBank.filter((q) => q.type === mode);
-
-        state.activeDeck.sort(() => Math.random() - 0.5);
-        state.currentIndex = 0;
-        loadQuestion();
-      }
-
-      function loadQuestion() {
-        const data = state.activeDeck[state.currentIndex];
-        const t = langData[state.language];
-        state.attemptsLeft = 3;
-        state.isLocked = false;
-        document.getElementById("nav-overlay").classList.add("hidden");
-        ["lock-overlay-a", "lock-overlay-b"].forEach(
-          (id) => (document.getElementById(id).style.opacity = "1"),
-        );
-        ["content-answer", "content-grandma"].forEach((id) => {
-          const el = document.getElementById(id);
-          el.classList.remove("unlocked");
-          el.classList.add("locked-blur");
-        });
-
-        let optsHtml = "";
-        data.opts.forEach((o, i) => {
-          const letter = ["A", "B", "C", "D"][i];
-          optsHtml += `<button id="opt-${i}" onclick="handleAnswer(${i})" class="option-btn group"><div class="option-circle group-hover:bg-stone-600 transition">${letter}</div><span class="font-medium">${o}</span></button>`;
-        });
-
-        document.getElementById("card-question").innerHTML =
-          `<div class="h-full flex flex-col"><div class="flex justify-between items-start mb-4"><span class="category-pill">${data.cat}</span><div class="flex gap-1">${[1, 2, 3].map((n) => `<div id="life-${n}" class="w-2 h-2 rounded-full bg-emerald-500"></div>`).join("")}</div></div><h2 class="text-xl font-bold text-white mb-3 leading-snug">${data.q}</h2><div class="bg-stone-800/50 border-l-2 border-amber-600 p-3 rounded-r-lg mb-6"><p class="text-sm text-stone-400 italic font-mono leading-relaxed">${data.scenario}</p></div><div class="flex-grow space-y-2" id="options-container">${optsHtml}</div><div class="mt-auto pt-4 flex justify-between text-[10px] text-stone-600 font-mono uppercase"><span>ID: #${data.id}</span><span>Attempts: <span id="attempts-display">3</span></span></div></div>`;
-
-        let ansHtml = "";
-        data.opts.forEach((o, i) => {
-          if (i === data.correct)
-            ansHtml += `<div class="p-3 bg-emerald-900/30 border border-emerald-500/50 rounded-lg flex items-center gap-3 mb-2"><div class="text-emerald-500 font-bold">✓</div><div class="text-sm font-bold text-white font-mono">${o}</div></div>`;
-        });
-
-        document.getElementById("content-answer").innerHTML =
-          `<div class="mb-4"><span class="category-pill bg-emerald-900 text-emerald-400 border-emerald-700">${t.label_solution}</span></div><div class="mb-6">${ansHtml}</div><div class="bg-black border border-amber-900/50 p-4 rounded-xl shadow-lg mt-auto relative overflow-hidden"><div class="absolute -right-2 -top-2 text-6xl opacity-10">💡</div><p class="text-[10px] text-amber-500 font-bold uppercase tracking-widest mb-2">${t.label_senior}</p><p class="text-sm text-stone-300 font-medium leading-relaxed">${data.senior}</p></div>`;
-        document.getElementById("content-grandma").innerHTML =
-          `<div class="text-6xl mb-6 animate-bounce">🧠</div><h3 class="text-amber-500 font-serif italic text-lg mb-6">"${t.label_grandma}"</h3><p class="text-white text-lg font-medium leading-relaxed px-2">"${data.grandma}"</p>`;
-      }
-
-      function handleAnswer(idx) {
-        if (state.isLocked) return;
-        const data = state.activeDeck[state.currentIndex];
-        const btn = document.getElementById(`opt-${idx}`);
-        if (idx === data.correct) successSequence(btn);
-        else failSequence(btn);
-      }
-
-      function successSequence(btn) {
-        state.isLocked = true;
-        state.score += state.attemptsLeft * 10;
-        state.streak++;
-        saveData();
-        updateStatsUI();
-        btn.classList.add("correct-answer");
-        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-        document
-          .getElementById("options-container")
-          .classList.add("disabled-opts");
-        revealIntel();
-        document.getElementById("nav-overlay").classList.remove("hidden");
-        setTimeout(
-          () =>
-            document
-              .getElementById("card-answer")
-              .scrollIntoView({ behavior: "smooth", block: "center" }),
-          500,
-        );
-      }
-
-      function failSequence(btn) {
-        state.attemptsLeft--;
-        state.streak = 0;
-        updateStatsUI();
-        btn.classList.add("wrong-answer");
-        setTimeout(() => btn.classList.remove("wrong-answer"), 500);
-        btn.classList.add("opacity-50", "pointer-events-none");
-        document.getElementById(`life-${state.attemptsLeft + 1}`).className =
-          "w-2 h-2 rounded-full bg-stone-700";
-        document.getElementById("attempts-display").innerText =
-          state.attemptsLeft;
-        if (state.attemptsLeft <= 0) {
-          state.isLocked = true;
-          document
-            .getElementById(
-              `opt-${state.activeDeck[state.currentIndex].correct}`,
-            )
-            .classList.add("correct-answer", "ring-2", "ring-white");
-          revealIntel();
-          document.getElementById("nav-overlay").classList.remove("hidden");
-          setTimeout(
-            () =>
-              document
-                .getElementById("card-answer")
-                .scrollIntoView({ behavior: "smooth", block: "center" }),
-            500,
-          );
+        // Fill ALL gaps up to 305
+        let currentId = 1;
+        while(currentId <= 305) {
+            const exists = questionBank.find(q => q.id === currentId);
+            if(!exists) {
+                const tmpl = drillTemplates[currentId % drillTemplates.length];
+                questionBank.push({
+                    id: currentId,
+                    type: currentId < 100 ? "core" : "boss", 
+                    cat: `Drill: ${tmpl.t}`,
+                    icon: "🎯",
+                    q: `${tmpl.s}`,
+                    scenario: tmpl.sc,
+                    opts: tmpl.v,
+                    correct: tmpl.c,
+                    senior: tmpl.senior,
+                    grandma: tmpl.meta
+                });
+            }
+            currentId++;
         }
-      }
 
-      function revealIntel() {
-        ["lock-overlay-a", "lock-overlay-b"].forEach(
-          (id) => (document.getElementById(id).style.opacity = "0"),
-        );
-        ["content-answer", "content-grandma"].forEach((id) => {
-          const el = document.getElementById(id);
-          el.classList.remove("locked-blur");
-          el.classList.add("unlocked");
-        });
-      }
+        // Sort to ensure order
+        questionBank.sort((a,b) => a.id - b.id);
 
-      // Navigation
-      function nextQuestion() {
-        if (state.currentIndex < state.activeDeck.length - 1) {
-          state.currentIndex++;
-          loadQuestion();
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        } else {
-          alert("Mission Complete! Shuffling deck.");
-          setMode(state.mode);
+        const contentData = {
+            sv: {
+                codex: [
+                    { title: "Domain 1: Plan & Manage", desc: "Arkitektur, Administration och Styrning.", color: "border-blue-500", topics: [
+                        { c: "OneLake", b: "A single, unified, logical data lake for the whole organization.", a: "OneDrive för Data. En enda gigantisk hårddisk som alla verktyg (Spark, SQL, PBI) delar på. Du slipper kopiera filer. 'One Copy' to rule them all." },
+                        { c: "Capacity (F-SKU vs P-SKU)", b: "Dedicated set of resources.", a: "Hyran för lägenheten. F-SKU är Azure (Pay-as-you-go, du kan pausa). P-SKU är M365 (Månadshyra, kan inte pausas). Går proppen, går systemet ner." },
+                        { c: "Shortcuts", b: "Objects pointing to other storage locations.", a: "Genvägar på skrivbordet. Filen ligger kvar i Amazon S3, men du öppnar den i Fabric. Zero Copy." },
+                        { c: "Workspaces", b: "Containers for items and security.", a: "Projekt-rum. Här samarbetar ni. Varje rum har en nyckel (roller)." }
+                    ]},
+                    { title: "Domain 2: Ingest & Transform", desc: "Data Engineering och Pipelines.", color: "border-purple-500", topics: [
+                        { c: "Lakehouse vs Warehouse", b: "Spark/Python vs T-SQL.", a: "Lakehouse = Messy Desk (Python). Warehouse = Arkivskåp (SQL)." },
+                        { c: "Dataflow Gen2", b: "Low-code ingestion tool.", a: "Power Query på steroider. Kan skriva till databaser." },
+                        { c: "Notebooks", b: "Code-first development.", a: "Tungt artilleri. Python & Spark för komplex logik." }
+                    ]},
+                    { title: "Domain 3: Model & Serve", desc: "Data Warehousing och Semantic Models.", color: "border-emerald-500", topics: [
+                        { c: "DirectLake", b: "Reads delta parquet directly into PBI memory.", a: "Drick ur kranen. Ingen import, ingen väntetid. Blixtsnabbt." },
+                        { c: "Star Schema", b: "Fact and Dimension modeling.", a: "Solen och planeterna. Transaktioner i mitten, 'Vem/Vad/När' runt om." }
+                    ]}
+                ],
+                cheat: [
+                    { domain: "🏗️ DOMAIN 1: INGESTION", color: "border-blue-500", rows: [
+                        {sc: "Data i AWS S3 / Google Cloud", sol: "OneLake Shortcut", log: "Zero Copy. Peka på det."},
+                        {sc: "Filer i mapp (CSV/Parquet)", sol: "Copy Activity", log: "Lastbilen. Optimerad för filer."},
+                        {sc: "Realtidsdata (IoT)", sol: "Eventstream + KQL", log: "Brandslangen. KQL dricker snabbast."}
+                    ]},
+                    { domain: "💾 DOMAIN 3: STORAGE", color: "border-emerald-500", rows: [
+                        {sc: "PBI rapport långsam", sol: "DirectLake", log: "Direktlinjen. Snabbare än DQ."},
+                        {sc: "Enorm tabell", sol: "Partitionering", log: "Kartoteket. Läs inte allt."},
+                        {sc: "Historik / Undo", sol: "Delta Time Travel", log: "Tidsmaskinen. Backa till igår."}
+                    ]}
+                ],
+                rules: [
+                    {t: "1. Flytta aldrig data i onödan.", d: "Använd Shortcuts först. Kopiera bara om du måste transformera."},
+                    {t: "2. Läs aldrig allt om du bara behöver lite.", d: "Använd Partitionering och Incremental Refresh."},
+                    {t: "3. Rapporten ska vara dum.", d: "Flytta logiken till Warehouse/Dataflow. Rapporten ska bara visa resultatet."},
+                    {t: "4. Hårdkoda aldrig.", d: "Använd Parametrar i Pipelines och Key Vault för lösenord."}
+                ]
+            },
+            en: {
+                codex: [
+                    { title: "Domain 1: Plan & Manage", desc: "Architecture, Administration, and Governance.", color: "border-blue-500", topics: [
+                        { c: "OneLake", b: "A single, unified, logical data lake for the whole organization.", a: "OneDrive for Data. One giant hard drive shared by all tools. No copying files. 'One Copy' to rule them all." },
+                        { c: "Capacity (F-SKU vs P-SKU)", b: "Dedicated set of resources.", a: "Rent for the apartment. F-SKU is Azure (Pay-as-you-go, pausable). P-SKU is M365 (Monthly rent, no pause). If capacity hits limit, system throttles." },
+                        { c: "Shortcuts", b: "Objects pointing to other storage locations.", a: "Desktop shortcuts. The file stays in Amazon S3, but you open it in Fabric. Zero Copy." },
+                        { c: "Workspaces", b: "Containers for items and security.", a: "Project Rooms. Where you collaborate. Each room has a key (roles)." }
+                    ]},
+                    { title: "Domain 2: Ingest & Transform", desc: "Data Engineering and Pipelines.", color: "border-purple-500", topics: [
+                        { c: "Lakehouse vs Warehouse", b: "Spark/Python vs T-SQL.", a: "Lakehouse = Messy Desk (Python). Warehouse = Filing Cabinet (SQL)." },
+                        { c: "Dataflow Gen2", b: "Low-code ingestion tool.", a: "Power Query on steroids. Can write to databases." },
+                        { c: "Notebooks", b: "Code-first development.", a: "Heavy Artillery. Python & Spark for complex logic." }
+                    ]},
+                    { title: "Domain 3: Model & Serve", desc: "Data Warehousing and Semantic Models.", color: "border-emerald-500", topics: [
+                        { c: "DirectLake", b: "Reads delta parquet directly into PBI memory.", a: "Drink from the tap. No import, no wait time. Blazing fast." },
+                        { c: "Star Schema", b: "Fact and Dimension modeling.", a: "The Sun and Planets. Transactions in the middle, 'Who/What/When' orbiting around." }
+                    ]}
+                ],
+                cheat: [
+                    { domain: "🏗️ DOMAIN 1: INGESTION", color: "border-blue-500", rows: [
+                        {sc: "Data in AWS S3 / Google Cloud", sol: "OneLake Shortcut", log: "Zero Copy. Point to it."},
+                        {sc: "Files in folder (CSV/Parquet)", sol: "Copy Activity", log: "The Truck. Optimized for files."},
+                        {sc: "Real-time data (IoT)", sol: "Eventstream + KQL", log: "Firehose. KQL drinks fastest."}
+                    ]},
+                    { domain: "💾 DOMAIN 3: STORAGE", color: "border-emerald-500", rows: [
+                        {sc: "PBI report slow", sol: "DirectLake", log: "Direct Line. Faster than DQ."},
+                        {sc: "Huge table", sol: "Partitioning", log: "Card Catalog. Don't read everything."},
+                        {sc: "History / Undo", sol: "Delta Time Travel", log: "Time Machine. Go back to yesterday."}
+                    ]}
+                ],
+                rules: [
+                    {t: "1. Never move data unnecessarily.", d: "Use Shortcuts first."},
+                    {t: "2. Never read everything.", d: "Use Partitioning and Incremental Refresh."},
+                    {t: "3. Make the report dumb.", d: "Move logic to Warehouse."},
+                    {t: "4. Never hardcode.", d: "Use Parameters."}
+                ]
+            }
+        };
+
+        // ==========================================
+        //  STATE & FUNCTIONS
+        // ==========================================
+        let state = { view: 'simulator', score: 0, streak: 0, mode: 'all', activeDeck: [], currentIndex: 0, attemptsLeft: 3, isLocked: false, apiKey: '', language: 'sv' };
+        
+        const saved = localStorage.getItem('dp600_atlas_ultimate');
+        if(saved) { 
+            const p = JSON.parse(saved); 
+            state.score = p.score || 0; state.streak = p.streak || 0; 
+            state.apiKey = p.apiKey || ''; state.language = p.language || 'sv';
         }
-      }
 
-      function prevQuestion() {
-        if (state.currentIndex > 0) {
-          state.currentIndex--;
-          loadQuestion();
-          window.scrollTo({ top: 0, behavior: "smooth" });
+        function init() {
+            setMode('all');
+            applyLanguage();
+            renderCodex(); 
+            renderCheatSheet();
+            updateStatsUI();
         }
-      }
 
-      function updateStatsUI() {
-        document.getElementById("score-display").innerText = state.score;
-        document.getElementById("streak-display").innerText = state.streak;
-      }
+        // Render Cheat Sheet (FIXED)
+        function renderCheatSheet() {
+            const container = document.getElementById('cheat-content');
+            const t = contentData[state.language]; 
+            const labels = langData[state.language];
+            let html = '';
+            
+            // Render Tables
+            t.cheat.forEach(d => {
+                let rows = '';
+                d.rows.forEach(r => { rows += `<tr><td class="cheat-scenario">${r.sc}</td><td class="cheat-solution">${r.sol}</td><td class="cheat-logic">${r.log}</td></tr>`; });
+                html += `<div class="codex-card border-l-4 ${d.color}"><h3 class="text-2xl font-bold text-white mb-6">${d.domain}</h3><div class="overflow-x-auto"><table class="w-full text-left cheat-table"><thead class="bg-white/5 text-stone-100 uppercase"><tr><th>${labels.cheat_th_sc}</th><th>${labels.cheat_th_sol}</th><th>${labels.cheat_th_log}</th></tr></thead><tbody class="divide-y divide-white/5">${rows}</tbody></table></div></div>`;
+            });
 
-      function saveData() {
-        localStorage.setItem(
-          "dp600_atlas_ultimate",
-          JSON.stringify({
-            score: state.score,
-            streak: state.streak,
-            apiKey: state.apiKey,
-            language: state.language,
-          }),
-        );
-      }
-      function resetProgress() {
-        if (confirm("Reset Stats?")) {
-          state.score = 0;
-          state.streak = 0;
-          saveData();
-          updateStatsUI();
-          init();
+            // Render Strategic Rules
+            let rulesHtml = '';
+            t.rules.forEach(r => {
+                rulesHtml += `<div class="p-4 bg-white/5 rounded-lg border border-white/10"><span class="text-amber-500 font-bold block mb-1 text-lg">${r.t}</span><span class="text-stone-400 text-sm leading-relaxed">${r.d}</span></div>`;
+            });
+            html += `<div class="bg-gradient-to-r from-stone-900 to-black p-8 rounded-2xl border border-stone-800 text-center mt-12"><h3 class="text-xl font-bold text-white mb-6 uppercase tracking-widest">${labels.label_strategic_rules}</h3><div class="grid md:grid-cols-2 gap-6 text-left">${rulesHtml}</div></div>`;
+
+            container.innerHTML = html;
         }
-      }
 
-      function applyLanguage() {
-        const t = langData[state.language];
-        const btn = document.getElementById("lang-btn");
-        btn.innerHTML = state.language === "sv" ? "🇸🇪" : "🇺🇸";
-        document.getElementById("nav-sim").innerText = t.nav_sim;
-        document.getElementById("nav-coach").innerHTML =
-          `${t.nav_coach} <span class="text-[10px] text-amber-500">✨</span>`;
-        document.getElementById("nav-codex").innerText = t.nav_codex;
-        document.getElementById("nav-cheat").innerText = t.nav_cheat;
-        document.getElementById("btn-all").innerText = t.btn_all;
-        document.getElementById("btn-core").innerText = t.btn_core;
-        document.getElementById("btn-boss").innerText = t.btn_boss;
-        document.getElementById("btn-code").innerText = t.btn_code;
-        document.getElementById("label-mission").innerText = t.label_mission;
-        document.getElementById("label-intel").innerText = t.label_intel;
-        document.getElementById("label-strategy").innerText = t.label_strategy;
-        document.getElementById("btn-next").innerHTML =
-          `${t.btn_next} <span>→</span>`;
-        document.getElementById("btn-ai-gen").innerHTML =
-          `<span>✨</span> ${t.btn_ai_gen}`;
-        document.getElementById("coach-subtitle").innerText = t.coach_sub;
-        document.getElementById("coach-welcome").innerHTML = t.coach_wel;
-        document.getElementById("chat-input").placeholder = t.coach_ph;
-        document.getElementById("codex-subtitle").innerText = t.codex_sub;
-        document.getElementById("cheat-subtitle").innerText = t.cheat_sub;
-        if (state.activeDeck.length > 0) loadQuestion();
-        renderCodex();
-        renderCheatSheet();
-      }
+        // Render Codex
+        function renderCodex() {
+            const container = document.getElementById('codex-content');
+            const t = contentData[state.language]; 
+            let html = '';
+            t.codex.forEach(domain => {
+                let topicsHtml = '';
+                domain.topics.forEach(tp => {
+                    topicsHtml += `<div class="mb-8 last:mb-0"><div class="topic-header"><span class="text-amber-500 text-xl">●</span><h4 class="text-white font-bold text-lg">${tp.c}</h4></div><div class="boring-def">"${tp.b}"</div><div class="atlas-trans"><div class="atlas-label">${langData[state.language].label_atlas_says}</div>${tp.a}</div></div>`;
+                });
+                html += `<div class="codex-card ${domain.color}"><h3 class="text-2xl font-black text-white mb-2">${domain.title}</h3><p class="text-stone-400 text-sm mb-8 border-b border-stone-800 pb-4">${domain.desc}</p><div>${topicsHtml}</div></div>`;
+            });
+            container.innerHTML = html;
+        }
 
-      function toggleLanguage() {
-        state.language = state.language === "sv" ? "en" : "sv";
-        saveData();
-        applyLanguage();
-      }
+        // ... [Rest of Logic from v4: switchView, setMode, loadQuestion, handleAnswer, API calls] ...
+        
+        function switchView(viewName) {
+            state.view = viewName;
+            const views = ['simulator', 'codex', 'cheatsheet', 'coach'];
+            views.forEach(v => {
+                document.getElementById(`view-${v}`).classList.add('hidden');
+                document.getElementById(`nav-${v === 'cheatsheet' ? 'cheat' : v === 'simulator' ? 'sim' : v}`).className = (v === 'coach') ? "hover:text-white transition py-2 flex items-center gap-1" : "hover:text-white transition py-2";
+            });
+            document.getElementById(`view-${viewName}`).classList.remove('hidden');
+            const navId = viewName === 'cheatsheet' ? 'nav-cheat' : viewName === 'simulator' ? 'nav-sim' : `nav-${viewName}`;
+            document.getElementById(navId).classList.add('nav-active');
+            const filters = document.getElementById('sim-filters');
+            if(viewName === 'simulator') filters.classList.remove('opacity-0'); else filters.classList.add('opacity-0');
+        }
 
-      // API Functions
-      function openApiModal() {
-        document.getElementById("api-modal").style.display = "flex";
-      }
-      function closeApiModal() {
-        document.getElementById("api-modal").style.display = "none";
-      }
-      function saveApiKey() {
-        const key = document.getElementById("api-key-input").value.trim();
-        if (key) {
-          state.apiKey = key;
-          saveData();
-          closeApiModal();
-          alert("API Key Saved!");
+        function setMode(mode) {
+            state.mode = mode;
+            document.querySelectorAll('button[id^="btn-"]').forEach(b => b.className = "px-3 py-1 text-xs font-bold rounded text-stone-400 hover:text-white transition");
+            if(mode === 'code') document.getElementById(`btn-${mode}`).className = "px-3 py-1 text-xs font-bold rounded text-cyan-400 bg-cyan-900/30 border border-cyan-500 transition shadow-inner ml-1";
+            else document.getElementById(`btn-${mode}`).className = "px-3 py-1 text-xs font-bold rounded text-amber-500 bg-white/10 transition shadow-inner";
+            
+            if(mode === 'all') state.activeDeck = [...questionBank];
+            else state.activeDeck = questionBank.filter(q => q.type === mode);
+            
+            state.activeDeck.sort(() => Math.random() - 0.5);
+            state.currentIndex = 0;
+            loadQuestion();
         }
-      }
-      async function callGemini(prompt) {
-        if (!state.apiKey) {
-          openApiModal();
-          return null;
-        }
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${state.apiKey}`;
-        try {
-          const response = await fetch(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
-          });
-          const data = await response.json();
-          return data.candidates[0].content.parts[0].text;
-        } catch (error) {
-          console.error("Gemini Error:", error);
-          alert("Error calling Gemini API.");
-          return null;
-        }
-      }
-      async function sendChatMessage() {
-        const input = document.getElementById("chat-input");
-        const msg = input.value.trim();
-        if (!msg) return;
-        const container = document.getElementById("chat-messages");
-        container.innerHTML += `<div class="msg msg-user">${msg}</div>`;
-        input.value = "";
-        container.scrollTop = container.scrollHeight;
-        const typingId = "typing-" + Date.now();
-        container.innerHTML += `<div id="${typingId}" class="msg msg-ai"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>`;
-        container.scrollTop = container.scrollHeight;
-        const langInstr =
-          state.language === "sv"
-            ? "Respond in Swedish."
-            : "Respond in English.";
-        const systemPrompt = `You are Atlas, a senior data architect for DP-600. Use 'Grandma rules' (analogies) and 'Senior Tips'. Keep answers concise. ${langInstr}`;
-        const fullPrompt = `${systemPrompt}\n\nUser: ${msg}\nAtlas:`;
-        const reply = await callGemini(fullPrompt);
-        document.getElementById(typingId).remove();
-        if (reply)
-          container.innerHTML += `<div class="msg msg-ai">${marked.parse(reply)}</div>`;
-        else
-          container.innerHTML += `<div class="msg msg-ai text-red-400">Connection failed.</div>`;
-        container.scrollTop = container.scrollHeight;
-      }
-      function handleEnter(e) {
-        if (e.key === "Enter") sendChatMessage();
-      }
-      async function generateAIQuestion() {
-        const btn = document.getElementById("btn-ai-gen");
-        const originalText = btn.innerHTML;
-        btn.innerHTML = `<span>⏳</span> ...`;
-        btn.disabled = true;
-        const langInstr =
-          state.language === "sv"
-            ? "in Swedish (but keep technical terms in English)"
-            : "in English";
-        const prompt = `Generate a unique multiple-choice question for DP-600 exam. Format as JSON: { "q": "Question text", "scenario": "Scenario text", "opts": ["Option A", "Option B", "Option C", "Option D"], "correct": 0-3 (index), "senior": "Technical explanation ${langInstr}", "grandma": "Simple analogy ${langInstr}" }. Topic: Advanced Fabric Analytics. Response MUST be valid JSON only.`;
-        const jsonStr = await callGemini(prompt);
-        if (jsonStr) {
-          try {
-            const cleanJson = jsonStr.replace(/```json|```/g, "").trim();
-            const qData = JSON.parse(cleanJson);
-            qData.id = 999;
-            qData.cat = "AI Generated ✨";
-            qData.type = "boss";
-            qData.icon = "🤖";
-            state.activeDeck.splice(state.currentIndex + 1, 0, qData);
-            nextQuestion();
-          } catch (e) {
-            console.error(e);
-            alert("AI Error. Try again.");
-          }
-        }
-        btn.innerHTML = originalText;
-        btn.disabled = false;
-      }
 
-      init();
+        function loadQuestion() {
+            const data = state.activeDeck[state.currentIndex];
+            const t = langData[state.language];
+            state.attemptsLeft = 3; state.isLocked = false;
+            document.getElementById('nav-overlay').classList.add('hidden');
+            ['lock-overlay-a', 'lock-overlay-b'].forEach(id => document.getElementById(id).style.opacity = '1');
+            ['content-answer', 'content-grandma'].forEach(id => { const el = document.getElementById(id); el.classList.remove('unlocked'); el.classList.add('locked-blur'); });
+
+            let optsHtml = '';
+            data.opts.forEach((o, i) => {
+                const letter = ['A', 'B', 'C', 'D'][i];
+                optsHtml += `<button id="opt-${i}" onclick="handleAnswer(${i})" class="option-btn group"><div class="option-circle group-hover:bg-stone-600 transition">${letter}</div><span class="font-medium">${o}</span></button>`;
+            });
+
+            document.getElementById('card-question').innerHTML = `
+                <div class="h-full flex flex-col">
+                    <div class="flex justify-between items-start mb-4"><span class="category-pill">${data.cat}</span><div class="flex gap-1">${[1,2,3].map(n => `<div id="life-${n}" class="w-2 h-2 rounded-full bg-emerald-500"></div>`).join('')}</div></div>
+                    <h2 class="text-xl font-bold text-white mb-3 leading-snug">${data.q}</h2>
+                    <div class="bg-stone-800/50 border-l-2 border-amber-600 p-3 rounded-r-lg mb-6"><p class="text-sm text-stone-400 italic font-mono leading-relaxed">${data.scenario}</p></div>
+                    <div class="flex-grow space-y-2" id="options-container">${optsHtml}</div>
+                    <div class="mt-auto pt-4 flex justify-between text-[10px] text-stone-600 font-mono uppercase"><span>ID: #${data.id}</span><span>Attempts: <span id="attempts-display">3</span></span></div>
+                </div>`;
+
+            let ansHtml = '';
+            data.opts.forEach((o, i) => { if(i === data.correct) ansHtml += `<div class="p-3 bg-emerald-900/30 border border-emerald-500/50 rounded-lg flex items-center gap-3 mb-2"><div class="text-emerald-500 font-bold">✓</div><div class="text-sm font-bold text-white font-mono">${o}</div></div>`; });
+            
+            document.getElementById('content-answer').innerHTML = `<div class="mb-4"><span class="category-pill bg-emerald-900 text-emerald-400 border-emerald-700">${t.label_solution}</span></div><div class="mb-6">${ansHtml}</div><div class="bg-black border border-amber-900/50 p-4 rounded-xl shadow-lg mt-auto relative overflow-hidden"><div class="absolute -right-2 -top-2 text-6xl opacity-10">💡</div><p class="text-[10px] text-amber-500 font-bold uppercase tracking-widest mb-2">${t.label_senior}</p><p class="text-sm text-stone-300 font-medium leading-relaxed">${data.senior}</p></div>`;
+            document.getElementById('content-grandma').innerHTML = `<div class="text-6xl mb-6 animate-bounce">🧠</div><h3 class="text-amber-500 font-serif italic text-lg mb-6">"${t.label_grandma}"</h3><p class="text-white text-lg font-medium leading-relaxed px-2">"${data.grandma}"</p>`;
+        }
+
+        function handleAnswer(idx) {
+            if(state.isLocked) return;
+            const data = state.activeDeck[state.currentIndex];
+            const btn = document.getElementById(`opt-${idx}`);
+            if (idx === data.correct) successSequence(btn); else failSequence(btn);
+        }
+
+        function successSequence(btn) {
+            state.isLocked = true; state.score += (state.attemptsLeft * 10); state.streak++; saveData(); updateStatsUI();
+            btn.classList.add('correct-answer');
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            document.getElementById('options-container').classList.add('disabled-opts');
+            revealIntel();
+            document.getElementById('nav-overlay').classList.remove('hidden');
+            setTimeout(() => document.getElementById('card-answer').scrollIntoView({ behavior: 'smooth', block: 'center' }), 500);
+        }
+
+        function failSequence(btn) {
+            state.attemptsLeft--; state.streak = 0; updateStatsUI();
+            btn.classList.add('wrong-answer');
+            setTimeout(() => btn.classList.remove('wrong-answer'), 500);
+            btn.classList.add('opacity-50', 'pointer-events-none');
+            document.getElementById(`life-${state.attemptsLeft + 1}`).className = "w-2 h-2 rounded-full bg-stone-700";
+            document.getElementById('attempts-display').innerText = state.attemptsLeft;
+            if(state.attemptsLeft <= 0) {
+                state.isLocked = true;
+                document.getElementById(`opt-${state.activeDeck[state.currentIndex].correct}`).classList.add('correct-answer', 'ring-2', 'ring-white');
+                revealIntel();
+                document.getElementById('nav-overlay').classList.remove('hidden');
+                setTimeout(() => document.getElementById('card-answer').scrollIntoView({ behavior: 'smooth', block: 'center' }), 500);
+            }
+        }
+
+        function revealIntel() {
+            ['lock-overlay-a', 'lock-overlay-b'].forEach(id => document.getElementById(id).style.opacity = '0');
+            ['content-answer', 'content-grandma'].forEach(id => { const el = document.getElementById(id); el.classList.remove('locked-blur'); el.classList.add('unlocked'); });
+        }
+
+        function nextQuestion() {
+            if(state.currentIndex < state.activeDeck.length - 1) {
+                state.currentIndex++;
+                loadQuestion();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                alert("Mission Complete! Shuffling deck.");
+                setMode(state.mode);
+            }
+        }
+
+        function prevQuestion() {
+            if(state.currentIndex > 0) {
+                state.currentIndex--;
+                loadQuestion();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function updateStatsUI() {
+            document.getElementById('score-display').innerText = state.score;
+            document.getElementById('streak-display').innerText = state.streak;
+        }
+
+        function saveData() { localStorage.setItem('dp600_atlas_ultimate', JSON.stringify({ score: state.score, streak: state.streak, apiKey: state.apiKey, language: state.language })); }
+        function resetProgress() { if(confirm("Reset Stats?")) { state.score = 0; state.streak = 0; saveData(); updateStatsUI(); init(); } }
+
+        function applyLanguage() {
+            const t = langData[state.language];
+            const btn = document.getElementById('lang-btn');
+            btn.innerHTML = state.language === 'sv' ? '🇸🇪' : '🇺🇸';
+            document.getElementById('nav-sim').innerText = t.nav_sim;
+            document.getElementById('nav-coach').innerHTML = `${t.nav_coach} <span class="text-[10px] text-amber-500">✨</span>`;
+            document.getElementById('nav-codex').innerText = t.nav_codex;
+            document.getElementById('nav-cheat').innerText = t.nav_cheat;
+            document.getElementById('btn-all').innerText = t.btn_all;
+            document.getElementById('btn-core').innerText = t.btn_core;
+            document.getElementById('btn-boss').innerText = t.btn_boss;
+            document.getElementById('btn-code').innerText = t.btn_code;
+            document.getElementById('label-mission').innerText = t.label_mission;
+            document.getElementById('label-intel').innerText = t.label_intel;
+            document.getElementById('label-strategy').innerText = t.label_strategy;
+            document.getElementById('btn-next').innerHTML = `${t.btn_next} <span>→</span>`;
+            document.getElementById('btn-ai-gen').innerHTML = `<span>✨</span> ${t.btn_ai_gen}`;
+            document.getElementById('coach-subtitle').innerText = t.coach_sub;
+            document.getElementById('coach-welcome').innerHTML = t.coach_wel;
+            document.getElementById('chat-input').placeholder = t.coach_ph;
+            document.getElementById('codex-subtitle').innerText = t.codex_sub;
+            document.getElementById('cheat-subtitle').innerText = t.cheat_sub;
+            if(state.activeDeck.length > 0) loadQuestion();
+            renderCodex();
+            renderCheatSheet();
+        }
+
+        function toggleLanguage() {
+            state.language = state.language === 'sv' ? 'en' : 'sv';
+            saveData();
+            applyLanguage();
+        }
+
+        function openApiModal() { document.getElementById('api-modal').style.display = 'flex'; }
+        function closeApiModal() { document.getElementById('api-modal').style.display = 'none'; }
+        function saveApiKey() { const key = document.getElementById('api-key-input').value.trim(); if(key) { state.apiKey = key; saveData(); closeApiModal(); alert("API Key Saved!"); } }
+        async function callGemini(prompt) {
+            if(!state.apiKey) { openApiModal(); return null; }
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${state.apiKey}`;
+            try {
+                const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }) });
+                const data = await response.json();
+                return data.candidates[0].content.parts[0].text;
+            } catch (error) { console.error("Gemini Error:", error); alert("Error calling Gemini API."); return null; }
+        }
+        async function sendChatMessage() {
+            const input = document.getElementById('chat-input');
+            const msg = input.value.trim();
+            if(!msg) return;
+            const container = document.getElementById('chat-messages');
+            container.innerHTML += `<div class="msg msg-user">${msg}</div>`;
+            input.value = '';
+            container.scrollTop = container.scrollHeight;
+            const typingId = 'typing-' + Date.now();
+            container.innerHTML += `<div id="${typingId}" class="msg msg-ai"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>`;
+            container.scrollTop = container.scrollHeight;
+            const langInstr = state.language === 'sv' ? "Respond in Swedish." : "Respond in English.";
+            const systemPrompt = `You are Atlas, a senior data architect for DP-600. Use 'Grandma rules' (analogies) and 'Senior Tips'. Keep answers concise. ${langInstr}`;
+            const fullPrompt = `${systemPrompt}\n\nUser: ${msg}\nAtlas:`;
+            const reply = await callGemini(fullPrompt);
+            document.getElementById(typingId).remove();
+            if(reply) container.innerHTML += `<div class="msg msg-ai">${marked.parse(reply)}</div>`; else container.innerHTML += `<div class="msg msg-ai text-red-400">Connection failed.</div>`;
+            container.scrollTop = container.scrollHeight;
+        }
+        function handleEnter(e) { if(e.key === 'Enter') sendChatMessage(); }
+        async function generateAIQuestion() {
+            const btn = document.getElementById('btn-ai-gen');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = `<span>⏳</span> ...`;
+            btn.disabled = true;
+            const langInstr = state.language === 'sv' ? "in Swedish (but keep technical terms in English)" : "in English";
+            const prompt = `Generate a unique multiple-choice question for DP-600 exam. Format as JSON: { "q": "Question text", "scenario": "Scenario text", "opts": ["Option A", "Option B", "Option C", "Option D"], "correct": 0-3 (index), "senior": "Technical explanation ${langInstr}", "grandma": "Simple analogy ${langInstr}" }. Topic: Advanced Fabric Analytics. Response MUST be valid JSON only.`;
+            const jsonStr = await callGemini(prompt);
+            if(jsonStr) {
+                try {
+                    const cleanJson = jsonStr.replace(/```json|```/g, '').trim();
+                    const qData = JSON.parse(cleanJson);
+                    qData.id = 999; qData.cat = "AI Generated ✨"; qData.type = "boss"; qData.icon = "🤖";
+                    state.activeDeck.splice(state.currentIndex + 1, 0, qData);
+                    nextQuestion();
+                } catch(e) { console.error(e); alert("AI Error. Try again."); }
+            }
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
+
+        init();
     </script>
-  </body>
+</body>
 </html>
