@@ -310,6 +310,24 @@
             { id: 804, type: "boss", cat: "Migration Switch", icon: "switch", q: "Synapse Migration?", scenario: "Du försöker migrera ett Synapse Dedicated Pool till Fabric DW men alternativet är utgråat eller saknas.", opts: ["Capacity Setting", "Workspace Setting", "Tenant Setting", "Kräver Support Ticket"], correct: 2, senior: "Möjligheten att använda specifika migreringsverktyg (som Synapse till Fabric) styrs ofta av en 'Tenant Setting' i Admin Portal som måste slås på först.", grandma: "Du kan inte köra in på den nya vägen förrän kommunen (Admin) har tagit bort avspärrningen (Tenant Setting)." }
         ];
 
+        // 1. Initiera State-objektet (Motorn)
+        // Vi försöker hämta sparad data först, annars kör vi default.
+        const savedData = JSON.parse(localStorage.getItem('dp600_atlas_ultimate_v2')) || {};
+        
+        let state = {
+            view: 'simulator',
+            mode: 'all',
+            language: savedData.language || 'sv',
+            score: savedData.score || 0,
+            streak: savedData.streak || 0,
+            mistakes: savedData.mistakes || {},
+            apiKey: savedData.apiKey || '',
+            activeDeck: [],
+            currentIndex: 0,
+            attemptsLeft: 3,
+            isLocked: false
+        };
+        const cleanBank = questionBank;
         // ==========================================
         //  ENGINE START
         // ==========================================
